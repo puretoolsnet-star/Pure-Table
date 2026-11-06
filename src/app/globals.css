@@ -1,0 +1,64 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+html {
+  touch-action: manipulation;
+  pointer-events: auto;
+}
+
+body {
+  touch-action: manipulation;
+  pointer-events: auto;
+  background-color: #020617;
+  color: #e5e7eb;
+  position: relative;
+  overflow-x: hidden;
+}
+
+#puretable-app-root {
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+#puretable-portal-root:empty {
+  display: contents;
+}
+
+#puretable-portal-root:not(:empty) {
+  pointer-events: none;
+}
+
+button,
+a,
+[role="button"],
+input,
+select,
+textarea,
+label {
+  touch-action: manipulation;
+}
+
+.glass-card {
+  background-color: rgb(15 23 42 / 0.72);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgb(30 41 59);
+}
+
+.puretable-page-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 80% 50% at 50% -20%,
+    rgba(59, 130, 246, 0.22),
+    transparent 70%
+  );
+}
+
+input,
+textarea,
+select {
+  max-width: 100%;
+}
