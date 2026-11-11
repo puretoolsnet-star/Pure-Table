@@ -20,6 +20,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
+  for (const hubPath of ["/table", "/pro"]) {
+    for (const locale of LOCALES) {
+      entries.push({
+        url: absoluteUrl(localizedPath(locale, hubPath)),
+        lastModified: LAST_MODIFIED,
+        changeFrequency: "weekly",
+        priority: 0.95,
+        alternates: { languages: buildSitemapLanguageAlternates(hubPath) },
+      });
+    }
+  }
+
   for (const toolId of TOOL_IDS) {
     const path = `/tools/${toolId}`;
     for (const locale of LOCALES) {

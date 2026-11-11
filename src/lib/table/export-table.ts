@@ -1,5 +1,11 @@
 import type { TableSheet } from "@/lib/table/types";
 
+export const LARGE_TABLE_ROW_THRESHOLD = 150;
+
+export function triggerTextDownload(content: string, filename: string, mime: string) {
+  triggerDownload(new Blob([content], { type: mime }), filename);
+}
+
 function triggerDownload(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");

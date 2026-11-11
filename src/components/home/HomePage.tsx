@@ -1,35 +1,14 @@
 "use client";
 
-import { Calculator, Coins, FileSpreadsheet, GitMerge, Receipt, ScanText } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { LayoutGrid, Sparkles } from "lucide-react";
+import Link from "next/link";
 
-import { HomeToolCard } from "@/components/home/HomeToolCard";
 import { PrivacyBanner } from "@/components/layout/PrivacyBanner";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { useI18n } from "@/i18n/context";
-import type { ToolId } from "@/i18n/types";
-import { toolRoute } from "@/lib/i18n/routing";
-
-const TOOL_META = [
-  { id: "image-to-table" as const, icon: ScanText, accent: "from-sky-500/25 to-sky-500/5" },
-  { id: "invoice-parser" as const, icon: Receipt, accent: "from-primary/25 to-primary/5" },
-  { id: "text-to-excel" as const, icon: FileSpreadsheet, accent: "from-accent/25 to-accent/5" },
-  { id: "merge-tables" as const, icon: GitMerge, accent: "from-violet-500/25 to-violet-500/5" },
-  { id: "margin-calculator" as const, icon: Calculator, accent: "from-emerald-500/25 to-emerald-500/5" },
-  { id: "currency-converter" as const, icon: Coins, accent: "from-amber-500/25 to-amber-500/5" },
-];
 
 export function HomePage() {
-  const router = useRouter();
   const { t, locale } = useI18n();
-
-  const openTool = useCallback(
-    (toolId: ToolId) => {
-      router.push(toolRoute(locale, toolId));
-    },
-    [locale, router],
-  );
 
   return (
     <div className="puretable-page-shell relative flex min-h-dvh w-full min-w-0 flex-1 flex-col overflow-x-hidden bg-slate-950 font-sans text-slate-100">
@@ -44,25 +23,53 @@ export function HomePage() {
             {t.home.heroSubtitle}
           </p>
         </section>
-        <section
-          aria-labelledby="puretable-tools-heading"
-          className="grid w-full min-w-0 grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
-        >
-          <h2
-            id="puretable-tools-heading"
-            className="col-span-full text-lg font-semibold tracking-tight text-white sm:text-xl"
-          >
-            {t.home.toolsHeading}
-          </h2>
-          {TOOL_META.map((tool) => (
-            <HomeToolCard
-              key={tool.id}
-              toolId={tool.id}
-              icon={tool.icon}
-              accent={tool.accent}
-              onActivate={openTool}
-            />
-          ))}
+        <section className="mb-10 w-full min-w-0">
+          <div className="relative overflow-hidden rounded-2xl border border-gray-800 bg-gray-950/90 p-5 shadow-lg shadow-cyan-500/5 sm:p-6">
+            <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-cyan-500/15 blur-3xl" />
+            <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 items-start gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-500/15 ring-1 ring-cyan-500/35">
+                  <LayoutGrid className="h-6 w-6 text-cyan-400" aria-hidden />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="text-lg font-semibold text-white sm:text-xl">{t.home.tableStudioTitle}</h2>
+                  <p className="mt-1 text-sm leading-relaxed text-gray-400 [overflow-wrap:anywhere]">
+                    {t.home.tableStudioHint}
+                  </p>
+                </div>
+              </div>
+              <Link
+                href={`/${locale}/table`}
+                className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-gray-950 hover:bg-cyan-400"
+              >
+                {t.home.tableStudioCta}
+              </Link>
+            </div>
+          </div>
+        </section>
+        <section className="mb-6 w-full min-w-0">
+          <div className="relative overflow-hidden rounded-2xl border border-gray-800 bg-gray-950/90 p-5 shadow-lg shadow-cyan-500/5 sm:p-6">
+            <div className="pointer-events-none absolute -left-12 -bottom-12 h-36 w-36 rounded-full bg-violet-500/10 blur-3xl" />
+            <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 items-start gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-500/15 ring-1 ring-cyan-500/35">
+                  <Sparkles className="h-6 w-6 text-cyan-400" aria-hidden />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="text-lg font-semibold text-white sm:text-xl">{t.home.proToolsTitle}</h2>
+                  <p className="mt-1 text-sm leading-relaxed text-gray-400 [overflow-wrap:anywhere]">
+                    {t.home.proToolsHint}
+                  </p>
+                </div>
+              </div>
+              <Link
+                href={`/${locale}/pro`}
+                className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-cyan-500/40 bg-gray-900 px-5 py-2.5 text-sm font-semibold text-cyan-100 hover:bg-gray-800"
+              >
+                {t.home.proToolsCta}
+              </Link>
+            </div>
+          </div>
         </section>
       </main>
     </div>

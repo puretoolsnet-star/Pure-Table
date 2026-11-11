@@ -239,6 +239,102 @@ const tools: Record<ToolId, Record<Locale, SeoCopy>> = {
       keywords: ["marża Excel", "cennik", "PureTable"],
     },
   },
+  "price-diff": {
+    uk: {
+      title: "Порівняння прайсів — PureTable",
+      description: "Два CSV або Excel у браузері: знайдіть різницю цін по товарах.",
+      keywords: ["порівняння прайсів", "price diff", "PureTable"],
+    },
+    en: {
+      title: "Price list diff — PureTable",
+      description: "Compare two CSV or Excel price lists locally in the browser.",
+      keywords: ["price diff", "compare spreadsheet", "PureTable"],
+    },
+    de: {
+      title: "Preislisten-Vergleich — PureTable",
+      description: "Zwei Preislisten im Browser vergleichen.",
+      keywords: ["Preisvergleich", "Excel", "PureTable"],
+    },
+    fr: {
+      title: "Comparateur de prix — PureTable",
+      description: "Comparez deux grilles tarifaires dans le navigateur.",
+      keywords: ["comparateur prix", "Excel", "PureTable"],
+    },
+    es: {
+      title: "Comparador de precios — PureTable",
+      description: "Compara dos listas de precios en el navegador.",
+      keywords: ["comparar precios", "Excel", "PureTable"],
+    },
+    pl: {
+      title: "Porównanie cenników — PureTable",
+      description: "Porównaj dwa cenniki lokalnie w przeglądarce.",
+      keywords: ["porównanie cen", "Excel", "PureTable"],
+    },
+  },
+  "data-cleaner": {
+    uk: {
+      title: "Очищення табличних даних — PureTable",
+      description: "Дублікати, пробіли, телефони й суми — локально у браузері.",
+      keywords: ["очищення даних", "CSV", "PureTable"],
+    },
+    en: {
+      title: "Spreadsheet data cleaner — PureTable",
+      description: "Dedupe, trim, and format phones and amounts in the browser.",
+      keywords: ["data cleaning", "CSV", "PureTable"],
+    },
+    de: {
+      title: "Datenbereinigung — PureTable",
+      description: "Duplikate und Formatierung lokal im Browser.",
+      keywords: ["Datenbereinigung", "CSV", "PureTable"],
+    },
+    fr: {
+      title: "Nettoyage de données — PureTable",
+      description: "Doublons et formatage local dans le navigateur.",
+      keywords: ["nettoyage données", "CSV", "PureTable"],
+    },
+    es: {
+      title: "Limpieza de datos — PureTable",
+      description: "Duplicados y formato local en el navegador.",
+      keywords: ["limpieza datos", "CSV", "PureTable"],
+    },
+    pl: {
+      title: "Czyszczenie danych — PureTable",
+      description: "Duplikaty i formatowanie lokalnie w przeglądarce.",
+      keywords: ["czyszczenie danych", "CSV", "PureTable"],
+    },
+  },
+  "qr-generator": {
+    uk: {
+      title: "QR і штрихкоди з таблиці — PureTable",
+      description: "Генерація QR та CODE128 з колонок Excel/CSV у браузері.",
+      keywords: ["QR з Excel", "штрихкод", "PureTable"],
+    },
+    en: {
+      title: "QR & barcodes from spreadsheet — PureTable",
+      description: "Generate QR and CODE128 labels from table columns locally.",
+      keywords: ["QR from Excel", "barcode generator", "PureTable"],
+    },
+    de: {
+      title: "QR & Barcodes aus Tabelle — PureTable",
+      description: "QR und CODE128 lokal im Browser erzeugen.",
+      keywords: ["QR Excel", "Barcode", "PureTable"],
+    },
+    fr: {
+      title: "QR et codes-barres — PureTable",
+      description: "Générez QR et CODE128 depuis un tableau local.",
+      keywords: ["QR Excel", "code-barres", "PureTable"],
+    },
+    es: {
+      title: "QR y códigos de barras — PureTable",
+      description: "Genera QR y CODE128 desde una tabla local.",
+      keywords: ["QR Excel", "código de barras", "PureTable"],
+    },
+    pl: {
+      title: "QR i kody kreskowe — PureTable",
+      description: "Generuj QR i CODE128 z tabeli w przeglądarce.",
+      keywords: ["QR Excel", "kod kreskowy", "PureTable"],
+    },
+  },
   "currency-converter": {
     uk: {
       title: "Конвертер валютних цін у таблиці — PureTable",

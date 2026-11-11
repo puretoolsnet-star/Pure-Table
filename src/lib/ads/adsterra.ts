@@ -3,7 +3,7 @@ const NATIVE_ID = process.env.NEXT_PUBLIC_ADSTERRA_NATIVE_ID?.trim() ?? "";
 const SOCIAL_SRC = process.env.NEXT_PUBLIC_ADSTERRA_SOCIAL_SRC?.trim() ?? "";
 const POPUNDER_SRC = process.env.NEXT_PUBLIC_ADSTERRA_POPUNDER_SRC?.trim() ?? "";
 
-export const ADSTERRA_WATCH_MS = 12_000;
+export const ADSTERRA_WATCH_MS = 5_000;
 
 export const adsterraNative = {
   src: NATIVE_SRC,

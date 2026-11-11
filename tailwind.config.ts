@@ -8,7 +8,7 @@ const config: Config = {
         background: "#020617",
         surface: "#0f172a",
         "surface-hover": "#1e293b",
-        primary: "#3b82f6",
+        primary: "#06b6d4",
         accent: "#10b981",
       },
     },

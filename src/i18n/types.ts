@@ -7,6 +7,9 @@ export const TOOL_IDS = [
   "merge-tables",
   "margin-calculator",
   "currency-converter",
+  "price-diff",
+  "data-cleaner",
+  "qr-generator",
 ] as const;
 
 export type ToolId = (typeof TOOL_IDS)[number];
@@ -44,9 +47,56 @@ export type Dictionary = {
   home: {
     heroTitle: string;
     heroSubtitle: string;
+    tableStudioTitle: string;
+    tableStudioCta: string;
+    tableStudioHint: string;
+    proToolsTitle: string;
+    proToolsCta: string;
+    proToolsHint: string;
     toolsHeading: string;
     toolsAria: string;
     openTool: string;
+  };
+  proHub: {
+    badge: string;
+    title: string;
+    description: string;
+    toolsHeading: string;
+    openTool: string;
+    backToHub: string;
+  };
+  tableStudio: {
+    title: string;
+    description: string;
+    toolbarAria: string;
+    categories: {
+      importData: string;
+      editClean: string;
+      filtersSearch: string;
+      exportConvert: string;
+    };
+    importHint: string;
+    parsePasted: string;
+    searchLabel: string;
+    searchPlaceholder: string;
+    searchSummary: (visible: number, total: number) => string;
+    findLabel: string;
+    replaceLabel: string;
+    findPlaceholder: string;
+    replacePlaceholder: string;
+    applyReplace: string;
+    caseUpper: string;
+    caseLower: string;
+    caseTitle: string;
+    applyClean: string;
+    dedupeNow: string;
+    downloadMd: string;
+    downloadSql: string;
+    downloadHtml: string;
+    largeExportHint: string;
+    mobileScrollHint: string;
+    sqlTableName: string;
+    sqlTablePlaceholder: string;
   };
   rewardedAd: {
     sponsored: string;
@@ -159,5 +209,28 @@ export type Dictionary = {
     currencySample: string;
     currencyEmpty: string;
     currencyInvalidRate: string;
+    priceDiffSourceA: string;
+    priceDiffSourceB: string;
+    priceDiffKeyColumn: string;
+    priceDiffLeftPriceColumn: string;
+    priceDiffRightKeyColumn: string;
+    priceDiffRightPriceColumn: string;
+    priceDiffEmpty: string;
+    colPriceOld: string;
+    colPriceNew: string;
+    colPriceDelta: string;
+    colPriceDeltaPct: string;
+    dataCleanerApply: string;
+    qrNameColumn: string;
+    qrCodeColumn: string;
+    qrFormatLabel: string;
+    qrFormatQr: string;
+    qrFormatBarcode: string;
+    qrGenerate: string;
+    qrGenerating: string;
+    qrDownloadGallery: string;
+    qrPreviewTitle: string;
+    qrEmpty: string;
+    qrFailed: string;
   };
 };

@@ -32,11 +32,11 @@ export function ToolShell({
       <SiteHeader maxWidth="4xl" />
       <div className="relative z-10 mx-auto w-full min-w-0 max-w-4xl px-4 sm:px-6 md:px-8">
         <Link
-          href={href("/")}
-          className="inline-flex items-center gap-2 text-sm text-slate-400 transition-colors hover:text-white"
+          href={href("/pro")}
+          className="inline-flex items-center gap-2 text-sm text-slate-400 transition-colors hover:text-cyan-300"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
-          {t.common.backToTools}
+          {t.proHub.backToHub}
         </Link>
         <PrivacyBanner variant="compact" className="mt-4" />
         <div className="mt-6 flex items-start gap-4">
