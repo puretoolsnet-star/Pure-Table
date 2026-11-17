@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { absoluteUrl, getSiteUrl } from "@/lib/seo/site";
+import { absoluteCanonicalUrl, CANONICAL_SITE_ORIGIN } from "@/lib/seo/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/og"],
     },
-    host: getSiteUrl(),
-    sitemap: absoluteUrl("/sitemap.xml"),
+    host: CANONICAL_SITE_ORIGIN,
+    sitemap: absoluteCanonicalUrl("/sitemap.xml"),
   };
 }

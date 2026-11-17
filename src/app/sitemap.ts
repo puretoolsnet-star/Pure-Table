@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { LOCALES, TOOL_IDS } from "@/i18n/locales";
 import { localizedPath } from "@/lib/i18n/routing";
 import { buildSitemapLanguageAlternates } from "@/lib/seo/structured-data";
-import { absoluteUrl } from "@/lib/seo/site";
+import { absoluteCanonicalUrl } from "@/lib/seo/site";
 
 const LAST_MODIFIED = new Date("2026-11-17");
 
@@ -12,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   for (const locale of LOCALES) {
     entries.push({
-      url: absoluteUrl(localizedPath(locale, "/")),
+      url: absoluteCanonicalUrl(localizedPath(locale, "/")),
       lastModified: LAST_MODIFIED,
       changeFrequency: "weekly",
       priority: 1,
@@ -23,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const hubPath of ["/table", "/pro"]) {
     for (const locale of LOCALES) {
       entries.push({
-        url: absoluteUrl(localizedPath(locale, hubPath)),
+        url: absoluteCanonicalUrl(localizedPath(locale, hubPath)),
         lastModified: LAST_MODIFIED,
         changeFrequency: "weekly",
         priority: 0.95,
@@ -36,7 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const path = `/tools/${toolId}`;
     for (const locale of LOCALES) {
       entries.push({
-        url: absoluteUrl(localizedPath(locale, path)),
+        url: absoluteCanonicalUrl(localizedPath(locale, path)),
         lastModified: LAST_MODIFIED,
         changeFrequency: "monthly",
         priority: 0.9,

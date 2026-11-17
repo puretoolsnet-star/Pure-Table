@@ -2,6 +2,13 @@ import { DEFAULT_LOCALE, type Locale } from "@/i18n/locales";
 
 export { DEFAULT_LOCALE };
 
+export const CANONICAL_SITE_ORIGIN = "https://table.kixt.net";
+
+export function absoluteCanonicalUrl(path: string): string {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  return `${CANONICAL_SITE_ORIGIN}${normalized}`;
+}
+
 export function getSiteUrl(): string {
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (fromEnv) return fromEnv.replace(/\/$/, "");

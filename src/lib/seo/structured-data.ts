@@ -2,7 +2,7 @@ import { DEFAULT_LOCALE, LOCALES, dictionaries, type Locale } from "@/i18n/local
 import type { ToolId } from "@/i18n/types";
 import { getSeoCopy } from "@/i18n/seo/copy";
 import { homeRoute, localizedPath, toolRoute } from "@/lib/i18n/routing";
-import { absoluteUrl, HREFLANG_MAP } from "@/lib/seo/site";
+import { absoluteCanonicalUrl, absoluteUrl, HREFLANG_MAP } from "@/lib/seo/site";
 
 function siblingOrigin(name: string, fallback: string): string | null {
   const value = process.env[name]?.trim().replace(/\/$/, "");
@@ -90,8 +90,8 @@ export function buildToolStructuredData(toolId: ToolId, locale: Locale) {
 export function buildSitemapLanguageAlternates(path: string) {
   const languages: Record<string, string> = {};
   for (const locale of LOCALES) {
-    languages[HREFLANG_MAP[locale]] = absoluteUrl(localizedPath(locale, path));
+    languages[HREFLANG_MAP[locale]] = absoluteCanonicalUrl(localizedPath(locale, path));
   }
-  languages["x-default"] = absoluteUrl(localizedPath(DEFAULT_LOCALE, path));
+  languages["x-default"] = absoluteCanonicalUrl(localizedPath(DEFAULT_LOCALE, path));
   return languages;
 }
