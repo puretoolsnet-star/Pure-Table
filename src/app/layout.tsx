@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { Providers } from "@/app/providers";
@@ -36,6 +37,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           id="puretable-portal-root"
           aria-hidden
           className="pointer-events-none fixed inset-0 z-[100] [&>*]:pointer-events-auto"
+        />
+        <Script
+          id="adsterra-social-bar"
+          src="https://bauval.org/14/87b86fdbe8672de8c88f8a8e89aeff9f"
+          strategy="afterInteractive"
+          data-cfasync="false"
         />
       </body>
     </html>
