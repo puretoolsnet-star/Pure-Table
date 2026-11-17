@@ -16,7 +16,7 @@ export function getSiteUrl(): string {
   const vercel = process.env.VERCEL_URL?.trim();
   if (vercel) return `https://${vercel.replace(/\/$/, "")}`;
 
-  return "https://puretable.app";
+  return CANONICAL_SITE_ORIGIN;
 }
 
 export function absoluteUrl(path: string): string {

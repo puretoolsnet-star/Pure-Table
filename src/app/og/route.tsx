@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
             color: "#64748b",
           }}
         >
-          <span>puretable.app</span>
+          <span>table.kixt.net</span>
           <span style={{ textTransform: "uppercase", letterSpacing: "0.12em" }}>
             {parsed.locale} · client-side
           </span>

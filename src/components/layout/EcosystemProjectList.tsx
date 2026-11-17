@@ -4,9 +4,11 @@ import { FileSpreadsheet, PenLine, QrCode, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 import { useI18n } from "@/i18n/context";
-import { useLocalizedPath } from "@/lib/i18n/use-localized-path";
-import { ECOSYSTEM_PROJECTS, type EcosystemProjectId } from "@/lib/ecosystem";
-import { ecosystemExternalUrl } from "@/lib/ecosystem-urls";
+import {
+  ECOSYSTEM_PROJECTS,
+  ecosystemHref,
+  type EcosystemProjectId,
+} from "@/lib/ecosystem";
 import { cn } from "@/lib/cn";
 
 const PROJECT_ICONS: Record<EcosystemProjectId, typeof Sparkles> = {
@@ -28,8 +30,6 @@ export function EcosystemProjectList({
   cardsGrid = "responsive",
 }: EcosystemProjectListProps) {
   const { t, locale } = useI18n();
-  const toHref = useLocalizedPath();
-
   return (
     <ul
       className={cn(
@@ -42,7 +42,8 @@ export function EcosystemProjectList({
         const copy = t.ecosystem.items[project.id];
         const Icon = PROJECT_ICONS[project.id];
         const isActive = project.status === "active";
-        const isCurrent = Boolean(project.current);
+        const isCurrent = project.id === "pureTable";
+        const href = ecosystemHref(project, locale);
         const badgeLabel = isCurrent
           ? t.ecosystem.current
           : isActive
@@ -93,28 +94,22 @@ export function EcosystemProjectList({
           </>
         );
 
-        const externalHref = project.external
-          ? ecosystemExternalUrl(project.external, locale)
-          : null;
-        const internalHref = project.href ? toHref(project.href) : null;
-
         return (
           <li key={project.id} role="none" className="min-w-0 max-w-full">
-            {externalHref ? (
+            {href && project.external ? (
               <a
                 role="menuitem"
-                href={externalHref}
-                target="_blank"
+                href={href}
                 rel="noopener noreferrer"
                 className={cardClass}
                 onClick={onNavigate}
               >
                 {inner}
               </a>
-            ) : internalHref ? (
+            ) : href ? (
               <Link
                 role="menuitem"
-                href={internalHref}
+                href={href}
                 aria-current={isCurrent ? "page" : undefined}
                 className={cardClass}
                 onClick={onNavigate}

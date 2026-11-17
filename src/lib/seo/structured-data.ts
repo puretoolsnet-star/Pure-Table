@@ -11,9 +11,9 @@ function siblingOrigin(name: string, fallback: string): string | null {
 
 function ecosystemRelatedUrls(): string[] {
   return [
-    siblingOrigin("NEXT_PUBLIC_PUREPDF_URL", "https://purepdf.app"),
-    siblingOrigin("NEXT_PUBLIC_PUREQR_URL", "https://pureqr.app"),
-    siblingOrigin("NEXT_PUBLIC_PURESIGN_URL", "https://puresign.app"),
+    siblingOrigin("NEXT_PUBLIC_ECOSYSTEM_PUREPDF_URL", "https://pdf.kixt.net"),
+    siblingOrigin("NEXT_PUBLIC_ECOSYSTEM_PUREQR_URL", "https://qr.kixt.net"),
+    siblingOrigin("NEXT_PUBLIC_ECOSYSTEM_PURESIGN_URL", "https://sign.kixt.net"),
   ]
     .filter((origin): origin is string => Boolean(origin))
     .map((origin) => `${origin}${localizedPath(DEFAULT_LOCALE, "/")}`);
