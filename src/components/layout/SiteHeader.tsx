@@ -22,7 +22,7 @@ export function SiteHeader({ className, maxWidth = "6xl" }: SiteHeaderProps) {
   return (
     <header
       className={cn(
-        "relative z-20 mx-auto w-full min-w-0 shrink-0 px-4 py-3 sm:px-6 sm:py-5 md:px-8 md:py-6",
+        "puretable-site-header relative mx-auto w-full min-w-0 shrink-0 px-4 py-3 sm:px-6 sm:py-5 md:px-8 md:py-6",
         maxWidth === "6xl" ? "max-w-6xl" : "max-w-4xl",
         className,
       )}
@@ -47,7 +47,7 @@ export function SiteHeader({ className, maxWidth = "6xl" }: SiteHeaderProps) {
           </div>
         </Link>
 
-        <div className="relative z-30 flex min-w-0 shrink-0 items-center justify-end gap-1.5 sm:gap-2">
+        <div className="puretable-site-header__actions flex min-w-0 shrink-0 items-center justify-end gap-1.5 sm:gap-2">
           <span className="glass-card inline-flex max-w-[min(100%,11rem)] items-center gap-1 truncate rounded-full border border-accent/25 bg-accent/10 px-2 py-0.5 text-[10px] font-medium leading-tight text-accent sm:max-w-[13rem] sm:gap-1.5 sm:px-2.5 sm:py-1 sm:text-xs lg:hidden">
             <span className="h-1 w-1 shrink-0 rounded-full bg-accent sm:h-1.5 sm:w-1.5" aria-hidden />
             <span className="min-w-0 truncate">{t.security.badgeShort}</span>
