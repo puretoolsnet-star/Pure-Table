@@ -5,7 +5,7 @@ import { localizedPath } from "@/lib/i18n/routing";
 import { buildSitemapLanguageAlternates } from "@/lib/seo/structured-data";
 import { absoluteUrl } from "@/lib/seo/site";
 
-const LAST_MODIFIED = new Date("2026-11-06");
+const LAST_MODIFIED = new Date("2026-11-17");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];

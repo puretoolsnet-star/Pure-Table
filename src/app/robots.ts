@@ -1,10 +1,15 @@
 import type { MetadataRoute } from "next";
 
-import { absoluteUrl } from "@/lib/seo/site";
+import { absoluteUrl, getSiteUrl } from "@/lib/seo/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: "*", allow: "/", disallow: ["/api/"] },
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      disallow: ["/api/", "/og"],
+    },
+    host: getSiteUrl(),
     sitemap: absoluteUrl("/sitemap.xml"),
   };
 }

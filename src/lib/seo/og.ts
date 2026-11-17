@@ -5,7 +5,7 @@ import type { SeoPageId } from "@/i18n/seo/copy";
 const OG_IMAGE_PATH = "/og";
 
 export function isSeoPageId(value: string): value is SeoPageId {
-  if (value === "home") return true;
+  if (value === "home" || value === "pro" || value === "table") return true;
   return (TOOL_IDS as readonly string[]).includes(value);
 }
 

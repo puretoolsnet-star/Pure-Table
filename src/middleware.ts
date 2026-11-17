@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { DEFAULT_LOCALE, LOCALES, isLocale } from "@/i18n/locales";
 import { localizedPath } from "@/lib/i18n/routing";
+import { shouldAllowRequest } from "@/lib/security/bot-guard";
 
 const LOCALE_PREFIX = new RegExp(`^/(${LOCALES.join("|")})(/|$)`);
 
@@ -16,6 +17,16 @@ export function middleware(request: NextRequest) {
     /\.[a-zA-Z0-9]+$/.test(pathname)
   ) {
     return NextResponse.next();
+  }
+
+  if (!shouldAllowRequest(request)) {
+    return new NextResponse(null, {
+      status: 429,
+      headers: {
+        "Retry-After": "60",
+        "Cache-Control": "no-store",
+      },
+    });
   }
 
   if (pathname === "/ua" || pathname.startsWith("/ua/")) {

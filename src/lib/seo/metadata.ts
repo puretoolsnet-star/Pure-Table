@@ -16,6 +16,8 @@ import {
 
 function pathForPage(page: SeoPageId): string {
   if (page === "home") return "/";
+  if (page === "pro") return "/pro";
+  if (page === "table") return "/table";
   return `/tools/${page}`;
 }
 
@@ -73,6 +75,14 @@ export function buildToolMetadata(toolId: ToolId, locale: Locale): Metadata {
 
 export function buildHomeMetadata(locale: Locale): Metadata {
   return buildPageMetadata("home", locale);
+}
+
+export function buildProMetadata(locale: Locale): Metadata {
+  return buildPageMetadata("pro", locale);
+}
+
+export function buildTableMetadata(locale: Locale): Metadata {
+  return buildPageMetadata("table", locale);
 }
 
 export function siteMetadataBase(): Metadata {

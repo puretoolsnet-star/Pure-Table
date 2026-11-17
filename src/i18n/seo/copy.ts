@@ -1,7 +1,7 @@
 import type { Locale } from "@/i18n/locales";
 import type { ToolId } from "@/i18n/types";
 
-export type SeoPageId = "home" | ToolId;
+export type SeoPageId = "home" | "pro" | "table" | ToolId;
 
 export type SeoCopy = {
   title: string;
@@ -45,6 +45,84 @@ const home: Record<Locale, SeoCopy> = {
     description:
       "Sześć narzędzi lokalnych: OCR paragonów, parser faktur, separatory, scalanie, marża i przeliczanie walut. Bez wysyłania na serwer.",
     keywords: ["faktura Excel", "OCR paragon", "marża", "waluta w tabeli", "PureTable"],
+  },
+};
+
+const pro: Record<Locale, SeoCopy> = {
+  uk: {
+    title: "PureTable Pro — розширені інструменти для таблиць",
+    description:
+      "Додаткові утиліти для чеків, накладних і прайсів: очищення, порівняння цін і QR з таблиць. Усе локально у браузері.",
+    keywords: ["PureTable Pro", "прайс Excel", "порівняння цін", "QR таблиця", "PureTable"],
+  },
+  en: {
+    title: "PureTable Pro — advanced spreadsheet utilities",
+    description:
+      "Extra tools for receipts, invoices, and price lists: cleaning, price diff, and QR from columns. Everything runs locally in the browser.",
+    keywords: ["PureTable Pro", "price diff", "data cleaner", "QR spreadsheet", "PureTable"],
+  },
+  de: {
+    title: "PureTable Pro — erweiterte Tabellen-Tools",
+    description:
+      "Zusatztools für Belege, Rechnungen und Preislisten: Bereinigung, Preisvergleich und QR aus Spalten. Alles lokal im Browser.",
+    keywords: ["PureTable Pro", "Preisvergleich", "Datenbereinigung", "QR Excel", "PureTable"],
+  },
+  fr: {
+    title: "PureTable Pro — utilitaires tableurs avancés",
+    description:
+      "Outils pour reçus, factures et grilles tarifaires : nettoyage, comparateur de prix et QR depuis les colonnes. 100 % local.",
+    keywords: ["PureTable Pro", "comparateur prix", "nettoyage données", "QR Excel", "PureTable"],
+  },
+  es: {
+    title: "PureTable Pro — utilidades avanzadas para tablas",
+    description:
+      "Herramientas para recibos, facturas y listas de precios: limpieza, comparación y QR desde columnas. Todo en el navegador.",
+    keywords: ["PureTable Pro", "comparar precios", "limpieza datos", "QR Excel", "PureTable"],
+  },
+  pl: {
+    title: "PureTable Pro — zaawansowane narzędzia tabel",
+    description:
+      "Dodatkowe narzędzia dla paragonów, faktur i cenników: czyszczenie, porównanie cen i QR z kolumn. Lokalnie w przeglądarce.",
+    keywords: ["PureTable Pro", "porównanie cen", "czyszczenie danych", "QR Excel", "PureTable"],
+  },
+};
+
+const table: Record<Locale, SeoCopy> = {
+  uk: {
+    title: "Студія таблиць PureTable — Excel і CSV у браузері",
+    description:
+      "Завантажте CSV чи Excel, вставте текст, очистьте та відфільтруйте рядки, знайдіть і замініть — експорт у потрібному форматі. Без серверів.",
+    keywords: ["студія таблиць", "CSV Excel онлайн", "очищення таблиць", "експорт SQL", "PureTable"],
+  },
+  en: {
+    title: "PureTable table studio — Excel & CSV in the browser",
+    description:
+      "Load CSV or Excel, paste text, clean and filter rows, find and replace, then export in the format you need. No uploads to servers.",
+    keywords: ["table studio", "CSV Excel online", "spreadsheet editor", "export SQL", "PureTable"],
+  },
+  de: {
+    title: "PureTable Tabellen-Studio — Excel & CSV im Browser",
+    description:
+      "CSV oder Excel laden, Text einfügen, bereinigen, filtern, suchen und ersetzen — Export im gewünschten Format. Ohne Server-Upload.",
+    keywords: ["Tabellen-Studio", "CSV Excel online", "Tabellen bearbeiten", "SQL Export", "PureTable"],
+  },
+  fr: {
+    title: "Studio tableaux PureTable — Excel et CSV dans le navigateur",
+    description:
+      "Importez CSV ou Excel, collez du texte, nettoyez, filtrez, recherchez et remplacez, puis exportez. Données 100 % locales.",
+    keywords: ["studio tableur", "CSV Excel en ligne", "éditeur tableau", "export SQL", "PureTable"],
+  },
+  es: {
+    title: "Estudio de tablas PureTable — Excel y CSV en el navegador",
+    description:
+      "Carga CSV o Excel, pega texto, limpia y filtra filas, busca y reemplaza, y exporta en el formato que necesites. Sin subidas.",
+    keywords: ["estudio tablas", "CSV Excel online", "editor hoja cálculo", "exportar SQL", "PureTable"],
+  },
+  pl: {
+    title: "Studio tabel PureTable — Excel i CSV w przeglądarce",
+    description:
+      "Wczytaj CSV lub Excel, wklej tekst, oczyść i filtruj wiersze, wyszukuj i zamieniaj — eksport w wybranym formacie. Lokalnie.",
+    keywords: ["studio tabel", "CSV Excel online", "edytor arkusza", "eksport SQL", "PureTable"],
   },
 };
 
@@ -377,5 +455,7 @@ const tools: Record<ToolId, Record<Locale, SeoCopy>> = {
 
 export function getSeoCopy(page: SeoPageId, locale: Locale): SeoCopy {
   if (page === "home") return home[locale];
+  if (page === "pro") return pro[locale];
+  if (page === "table") return table[locale];
   return tools[page][locale];
 }
