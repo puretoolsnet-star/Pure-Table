@@ -13,13 +13,16 @@ import { useI18n } from "@/i18n/context";
 import type { ToolId } from "@/i18n/types";
 import { PRO_HUB_ICON, PRO_TOOL_CARDS } from "@/lib/pro-tools-meta";
 import { toolRoute } from "@/lib/i18n/routing";
+import { PageSeoSection } from "@/components/seo/PageSeoSection";
 import { useLocalizedPath } from "@/lib/i18n/use-localized-path";
+import { usePageSeoContent } from "@/lib/i18n/use-page-seo-content";
 
 export function ProToolsHub() {
   const router = useRouter();
   const { t, locale } = useI18n();
   const href = useLocalizedPath();
   const HubIcon = PRO_HUB_ICON;
+  const seoContent = usePageSeoContent("pro");
 
   const openTool = useCallback(
     (toolId: ToolId) => {
@@ -74,6 +77,7 @@ export function ProToolsHub() {
                 />
               ))}
             </div>
+            <PageSeoSection content={seoContent} />
           </section>
           <AdBanner className="lg:sticky lg:top-6 lg:self-start" />
         </div>

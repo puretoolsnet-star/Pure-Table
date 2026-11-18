@@ -11,16 +11,29 @@ export type SeoCopy = {
 
 const home: Record<Locale, SeoCopy> = {
   uk: {
-    title: "PureTable — накладні, OCR і прайси в Excel локально",
+    title: "PureTable — онлайн конвертер таблиць CSV та Excel у браузері",
     description:
-      "Шість інструментів у браузері: OCR чеків, парсер накладних, текст за роздільниками, злиття файлів, калькулятор маржі й конвертер валютних цін. Усе без відправки на сервер.",
-    keywords: ["Excel онлайн", "CSV", "OCR чек", "маржа", "валюта в Excel", "PureTable"],
+      "Дев’ять інструментів локально: OCR чеків, парсер накладних, текст у Excel, злиття CSV, маржа, валюта, порівняння прайсів, очищення й QR. Без відправки на сервер.",
+    keywords: [
+      "конвертер таблиць CSV",
+      "Excel онлайн",
+      "OCR чек",
+      "маржа",
+      "валюта в Excel",
+      "PureTable",
+    ],
   },
   en: {
-    title: "PureTable — invoices, OCR, and pricing in Excel",
+    title: "PureTable — Online Table and CSV Converter in Your Browser",
     description:
-      "Six local tools: receipt OCR, invoice parsing, delimiter splits, file merge, margin calculator, and currency price conversion. No server upload.",
-    keywords: ["invoice to Excel", "receipt OCR", "margin calculator", "currency table", "PureTable"],
+      "Nine local tools: receipt OCR, invoice parsing, text to Excel, CSV merge, margin calculator, currency prices, price diff, data cleaning, and QR. No server upload.",
+    keywords: [
+      "online table converter",
+      "CSV to Excel",
+      "receipt OCR",
+      "margin calculator",
+      "PureTable",
+    ],
   },
   de: {
     title: "PureTable — Rechnungen, OCR und Preise in Excel",
@@ -89,16 +102,28 @@ const pro: Record<Locale, SeoCopy> = {
 
 const table: Record<Locale, SeoCopy> = {
   uk: {
-    title: "Студія таблиць PureTable — Excel і CSV у браузері",
+    title: "Конвертер таблиць CSV, Excel, Markdown онлайн — студія PureTable",
     description:
-      "Завантажте CSV чи Excel, вставте текст, очистьте та відфільтруйте рядки, знайдіть і замініть — експорт у потрібному форматі. Без серверів.",
-    keywords: ["студія таблиць", "CSV Excel онлайн", "очищення таблиць", "експорт SQL", "PureTable"],
+      "Завантажте CSV чи Excel, вставте текст, очистьте та відфільтруйте рядки, знайдіть і замініть — експорт у CSV, XLSX, Markdown, SQL і HTML. Без серверів.",
+    keywords: [
+      "конвертер CSV JSON",
+      "Excel онлайн",
+      "експорт Markdown",
+      "SQL INSERT",
+      "PureTable",
+    ],
   },
   en: {
-    title: "PureTable table studio — Excel & CSV in the browser",
+    title: "Online Table Converter — CSV, Excel, Markdown & SQL | PureTable",
     description:
-      "Load CSV or Excel, paste text, clean and filter rows, find and replace, then export in the format you need. No uploads to servers.",
-    keywords: ["table studio", "CSV Excel online", "spreadsheet editor", "export SQL", "PureTable"],
+      "Load CSV or Excel, paste text, clean and filter rows, find and replace, then export CSV, XLSX, Markdown, SQL INSERT, or HTML. No uploads to servers.",
+    keywords: [
+      "CSV to Excel online",
+      "table editor",
+      "Markdown export",
+      "SQL export",
+      "PureTable",
+    ],
   },
   de: {
     title: "PureTable Tabellen-Studio — Excel & CSV im Browser",
@@ -205,13 +230,13 @@ const tools: Record<ToolId, Record<Locale, SeoCopy>> = {
   },
   "text-to-excel": {
     uk: {
-      title: "Текст у Excel — конвертер колонок | PureTable",
+      title: "Конвертер тексту в Excel і CSV онлайн | PureTable",
       description:
         "Розіб’є текстовий блок на рядки й колонки та збереже Excel або CSV. Обробка повністю на вашому пристрої.",
       keywords: ["текст у Excel", "текст у CSV", "конвертер таблиць", "PureTable"],
     },
     en: {
-      title: "Text to Excel converter — PureTable",
+      title: "Text to Excel / CSV Online Converter — PureTable",
       description:
         "Split a text block into rows and columns, then save Excel or CSV. Processing stays on your device.",
       keywords: ["text to Excel", "text to CSV", "column splitter", "PureTable"],

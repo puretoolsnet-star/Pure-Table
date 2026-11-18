@@ -5,10 +5,13 @@ import Link from "next/link";
 
 import { PrivacyBanner } from "@/components/layout/PrivacyBanner";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { PageSeoSection } from "@/components/seo/PageSeoSection";
 import { useI18n } from "@/i18n/context";
+import { usePageSeoContent } from "@/lib/i18n/use-page-seo-content";
 
 export function HomePage() {
   const { t, locale } = useI18n();
+  const seoContent = usePageSeoContent("home");
 
   return (
     <div className="puretable-page-shell relative flex min-h-dvh w-full min-w-0 flex-1 flex-col overflow-x-hidden bg-slate-950 font-sans text-slate-100">
@@ -71,6 +74,7 @@ export function HomePage() {
             </div>
           </div>
         </section>
+        <PageSeoSection content={seoContent} />
       </main>
     </div>
   );

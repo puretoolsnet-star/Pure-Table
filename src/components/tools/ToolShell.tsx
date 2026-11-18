@@ -10,7 +10,9 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { useI18n } from "@/i18n/context";
 import type { ToolId } from "@/i18n/types";
 import { useLocalizedPath } from "@/lib/i18n/use-localized-path";
+import { PageSeoSection } from "@/components/seo/PageSeoSection";
 import { cn } from "@/lib/cn";
+import { usePageSeoContent } from "@/lib/i18n/use-page-seo-content";
 
 export function ToolShell({
   toolId,
@@ -26,6 +28,7 @@ export function ToolShell({
   const { t } = useI18n();
   const href = useLocalizedPath();
   const copy = t.tools[toolId];
+  const seoContent = usePageSeoContent(toolId);
 
   return (
     <div className="puretable-page-shell relative flex min-h-full min-w-0 flex-1 flex-col overflow-x-hidden bg-slate-950 font-sans text-slate-100">
@@ -61,7 +64,10 @@ export function ToolShell({
         )}
       >
         <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_min(100%,17.5rem)] lg:items-start lg:gap-8">
-          <div className="relative z-10 min-w-0">{children}</div>
+          <div className="relative z-10 min-w-0 space-y-8">
+            {children}
+            <PageSeoSection content={seoContent} />
+          </div>
           <AdBanner className="lg:sticky lg:top-6 lg:self-start" />
         </div>
       </main>

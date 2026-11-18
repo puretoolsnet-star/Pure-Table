@@ -6,7 +6,9 @@ import type { ToolId } from "@/i18n/types";
 import { getSeoCopy, type SeoPageId } from "@/i18n/seo/copy";
 import { localizedPath } from "@/lib/i18n/routing";
 import { buildOgImageUrl } from "@/lib/seo/og";
+import { seoPathForPage } from "@/lib/seo/paths";
 import {
+  absoluteCanonicalUrl,
   absoluteUrl,
   DEFAULT_LOCALE,
   getSiteUrl,
@@ -14,29 +16,22 @@ import {
   OPEN_GRAPH_LOCALE,
 } from "@/lib/seo/site";
 
-function pathForPage(page: SeoPageId): string {
-  if (page === "home") return "/";
-  if (page === "pro") return "/pro";
-  if (page === "table") return "/table";
-  return `/tools/${page}`;
-}
-
 function languageAlternates(page: SeoPageId): Record<string, string> {
-  const path = pathForPage(page);
+  const path = seoPathForPage(page);
   const languages: Record<string, string> = {};
 
   for (const locale of LOCALES) {
-    languages[HREFLANG_MAP[locale]] = absoluteUrl(localizedPath(locale, path));
+    languages[HREFLANG_MAP[locale]] = absoluteCanonicalUrl(localizedPath(locale, path));
   }
 
-  languages["x-default"] = absoluteUrl(localizedPath(DEFAULT_LOCALE, path));
+  languages["x-default"] = absoluteCanonicalUrl(localizedPath(DEFAULT_LOCALE, path));
   return languages;
 }
 
 export function buildPageMetadata(page: SeoPageId, locale: Locale): Metadata {
   const copy = getSeoCopy(page, locale);
-  const path = pathForPage(page);
-  const canonical = absoluteUrl(localizedPath(locale, path));
+  const path = seoPathForPage(page);
+  const canonical = absoluteCanonicalUrl(localizedPath(locale, path));
   const ogImage = absoluteUrl(buildOgImageUrl(locale, page));
 
   return {

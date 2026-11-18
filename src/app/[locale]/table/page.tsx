@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 
 import { TableWorkspace } from "@/components/table/TableWorkspace";
-import { isLocale, LOCALES } from "@/i18n/locales";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { isLocale, LOCALES, type Locale } from "@/i18n/locales";
 import { buildTableMetadata } from "@/lib/seo/metadata";
+import { buildPageStructuredData } from "@/lib/seo/structured-data";
 
 export const instant = false;
 
@@ -19,5 +21,12 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/table">)
 export default async function TableStudioPage({ params }: PageProps<"/[locale]/table">) {
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
-  return <TableWorkspace />;
+  const locale = raw as Locale;
+
+  return (
+    <>
+      <JsonLd data={buildPageStructuredData("table", locale)} />
+      <TableWorkspace />
+    </>
+  );
 }

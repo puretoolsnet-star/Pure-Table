@@ -5,7 +5,7 @@ import { HomePage } from "@/components/home/HomePage";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { isLocale, LOCALES, type Locale } from "@/i18n/locales";
 import { buildHomeMetadata } from "@/lib/seo/metadata";
-import { buildHomeStructuredData } from "@/lib/seo/structured-data";
+import { buildPageStructuredData } from "@/lib/seo/structured-data";
 
 type HomePageProps = PageProps<"/[locale]">;
 
@@ -28,7 +28,7 @@ export default async function LocalizedHomePage({ params }: HomePageProps) {
 
   return (
     <>
-      <JsonLd data={buildHomeStructuredData(locale)} />
+      <JsonLd data={buildPageStructuredData("home", locale)} />
       <HomePage />
     </>
   );

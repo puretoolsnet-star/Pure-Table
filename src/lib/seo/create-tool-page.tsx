@@ -6,7 +6,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { isLocale, LOCALES, type Locale } from "@/i18n/locales";
 import type { ToolId } from "@/i18n/types";
 import { buildToolMetadata } from "@/lib/seo/metadata";
-import { buildToolStructuredData } from "@/lib/seo/structured-data";
+import { buildPageStructuredData } from "@/lib/seo/structured-data";
 
 type PageParams = { locale: string };
 
@@ -31,7 +31,7 @@ export function createToolPage(toolId: ToolId, ToolComponent: ComponentType) {
 
     return (
       <>
-        <JsonLd data={buildToolStructuredData(toolId, raw as Locale)} />
+        <JsonLd data={buildPageStructuredData(toolId, raw as Locale)} />
         <ToolComponent />
       </>
     );

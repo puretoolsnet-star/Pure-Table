@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 
 import { ProToolsHub } from "@/components/pro/ProToolsHub";
-import { isLocale, LOCALES } from "@/i18n/locales";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { isLocale, LOCALES, type Locale } from "@/i18n/locales";
 import { buildProMetadata } from "@/lib/seo/metadata";
+import { buildPageStructuredData } from "@/lib/seo/structured-data";
 
 export const instant = false;
 
@@ -19,5 +21,12 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/pro">) {
 export default async function ProToolsPage({ params }: PageProps<"/[locale]/pro">) {
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
-  return <ProToolsHub />;
+  const locale = raw as Locale;
+
+  return (
+    <>
+      <JsonLd data={buildPageStructuredData("pro", locale)} />
+      <ProToolsHub />
+    </>
+  );
 }

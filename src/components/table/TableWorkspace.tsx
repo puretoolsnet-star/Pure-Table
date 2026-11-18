@@ -22,7 +22,9 @@ import {
   findReplaceInTable,
 } from "@/lib/table/transform";
 import type { CleanOptions, DelimiterId, ParsedTable } from "@/lib/table/types";
+import { PageSeoSection } from "@/components/seo/PageSeoSection";
 import { useLocalizedPath } from "@/lib/i18n/use-localized-path";
+import { usePageSeoContent } from "@/lib/i18n/use-page-seo-content";
 import { cn } from "@/lib/cn";
 
 const SPREADSHEET =
@@ -36,6 +38,7 @@ const EMPTY: ParsedTable = { headers: [], rows: [] };
 export function TableWorkspace() {
   const { t } = useI18n();
   const href = useLocalizedPath();
+  const seoContent = usePageSeoContent("table");
 
   const [table, setTable] = useState<ParsedTable>(EMPTY);
   const [paste, setPaste] = useState("");
@@ -408,6 +411,7 @@ export function TableWorkspace() {
               mobileScrollHint={t.tableStudio.mobileScrollHint}
               variant="studio"
             />
+            <PageSeoSection content={seoContent} />
           </div>
           <AdBanner className="xl:sticky xl:top-6 xl:self-start" />
         </div>
