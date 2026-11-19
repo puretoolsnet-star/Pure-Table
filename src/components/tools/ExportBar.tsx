@@ -1,12 +1,10 @@
 "use client";
 
 import { Download } from "lucide-react";
-import type { ReactNode } from "react";
 
 import { useI18n } from "@/i18n/context";
 import { downloadSheets } from "@/lib/table/export-table";
 import type { TableSheet } from "@/lib/table/types";
-import { useMandatoryAd } from "@/lib/use-mandatory-ad";
 import { cn } from "@/lib/cn";
 
 export function ExportBar({
@@ -25,13 +23,12 @@ export function ExportBar({
   csvLabel?: string;
 }) {
   const { t } = useI18n();
-  const { requestDownload, modal } = useMandatoryAd();
   const excelLabel = xlsxLabel ?? t.workspace.downloadXlsx;
   const tableLabel = csvLabel ?? t.workspace.downloadCsv;
 
-  const start = (format: "csv" | "xlsx", label: string) => {
+  const start = (format: "csv" | "xlsx") => {
     if (!ready) return;
-    requestDownload(() => downloadSheets(format, filename, sheets), label);
+    void downloadSheets(format, filename, sheets);
   };
 
   return (
@@ -41,7 +38,7 @@ export function ExportBar({
         <button
           type="button"
           disabled={!ready}
-          onClick={() => start("xlsx", excelLabel)}
+          onClick={() => start("xlsx")}
           className={cn(
             "inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500",
             !ready && "cursor-not-allowed opacity-50",
@@ -53,7 +50,7 @@ export function ExportBar({
         <button
           type="button"
           disabled={!ready}
-          onClick={() => start("csv", tableLabel)}
+          onClick={() => start("csv")}
           className={cn(
             "inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:border-slate-500",
             !ready && "cursor-not-allowed opacity-50",
@@ -63,7 +60,6 @@ export function ExportBar({
           {tableLabel}
         </button>
       </div>
-      {modal as ReactNode}
     </div>
   );
 }

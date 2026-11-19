@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
-import { AdBanner } from "@/components/ads/AdBanner";
 import { ProToolCard } from "@/components/pro/ProToolCard";
 import { PrivacyBanner } from "@/components/layout/PrivacyBanner";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -58,29 +57,26 @@ export function ProToolsHub() {
           </div>
         </header>
 
-        <div className="mt-10 grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_min(100%,17.5rem)] lg:items-start">
-          <section
-            aria-labelledby="pro-tools-grid-heading"
-            className="min-w-0 space-y-4"
-          >
-            <h2 id="pro-tools-grid-heading" className="text-lg font-semibold text-white sm:text-xl">
-              {t.proHub.toolsHeading}
-            </h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {PRO_TOOL_CARDS.map((tool) => (
-                <ProToolCard
-                  key={tool.id}
-                  toolId={tool.id}
-                  icon={tool.icon}
-                  accent={tool.accent}
-                  onActivate={openTool}
-                />
-              ))}
-            </div>
-            <PageSeoSection content={seoContent} />
-          </section>
-          <AdBanner className="lg:sticky lg:top-6 lg:self-start" />
-        </div>
+        <section
+          aria-labelledby="pro-tools-grid-heading"
+          className="mt-10 min-w-0 space-y-4"
+        >
+          <h2 id="pro-tools-grid-heading" className="text-lg font-semibold text-white sm:text-xl">
+            {t.proHub.toolsHeading}
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {PRO_TOOL_CARDS.map((tool) => (
+              <ProToolCard
+                key={tool.id}
+                toolId={tool.id}
+                icon={tool.icon}
+                accent={tool.accent}
+                onActivate={openTool}
+              />
+            ))}
+          </div>
+          <PageSeoSection content={seoContent} />
+        </section>
       </main>
     </div>
   );

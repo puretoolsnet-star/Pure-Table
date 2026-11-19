@@ -1,7 +1,7 @@
 "use client";
 
 import { Barcode } from "lucide-react";
-import { useCallback, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { FileDropzone } from "@/components/tools/FileDropzone";
 import { ToolShell } from "@/components/tools/ToolShell";
@@ -17,7 +17,6 @@ import {
   type QrCodeMode,
 } from "@/lib/table/qr-gallery";
 import type { ParsedTable } from "@/lib/table/types";
-import { useMandatoryAd } from "@/lib/use-mandatory-ad";
 import { cn } from "@/lib/cn";
 
 const SPREADSHEET =
@@ -32,8 +31,6 @@ export function QrGeneratorTool() {
   const [items, setItems] = useState<CodeItem[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const { requestDownload, modal } = useMandatoryAd();
-
   const width = useMemo(
     () =>
       Math.max(
@@ -216,20 +213,14 @@ export function QrGeneratorTool() {
         <button
           type="button"
           disabled={items.length === 0}
-          onClick={() =>
-            requestDownload(
-              () => {
-                const html = buildCodeGalleryHtml(items, t.workspace.qrPreviewTitle);
-                downloadCodeGallery("puretable-codes", html);
-              },
-              t.workspace.qrDownloadGallery,
-            )
-          }
+          onClick={() => {
+            const html = buildCodeGalleryHtml(items, t.workspace.qrPreviewTitle);
+            downloadCodeGallery("puretable-codes", html);
+          }}
           className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-gray-700 bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white hover:border-cyan-500/40 disabled:opacity-50 sm:w-auto"
         >
           {t.workspace.qrDownloadGallery}
         </button>
-        {modal as ReactNode}
       </div>
     </ToolShell>
   );

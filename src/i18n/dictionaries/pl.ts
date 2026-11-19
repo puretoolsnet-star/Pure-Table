@@ -87,7 +87,7 @@ export const pl: Dictionary = {
     downloadSql: "Pobierz SQL (INSERT)",
     downloadHtml: "Pobierz HTML",
     largeExportHint:
-      "Duża tabela: przed pobraniem pojawi się 5-sekundowe okno reklamy — wesprzyj projekt.",
+      "Duża tabela: eksport może potrwać kilka sekund — przetwarzanie odbywa się wyłącznie w przeglądarce.",
     mobileScrollHint: "Na telefonie przewijaj tabelę w poziomie, aby zobaczyć kolumny.",
     sqlTableName: "Nazwa tabeli SQL",
     sqlTablePlaceholder: "np. faktury_2026",
@@ -100,26 +100,6 @@ export const pl: Dictionary = {
     toolsHeading: "Wybierz narzędzie",
     openTool: "Otwórz →",
     backToHub: "Wróć do Pro-narzędzi",
-  },
-  rewardedAd: {
-    sponsored: "Wesprzyj projekt",
-    title: "Wesprzyj projekt, oglądając reklamę",
-    message:
-      "Krótki 5-sekundowy klip Adsterra utrzymuje PureTable za darmo i w pełni lokalnie.",
-    watch: "Obejrzyj reklamę",
-    watching: "Trwa odtwarzanie…",
-    download: "Pobierz plik",
-    waitHint:
-      "Kliknij poniżej, aby uruchomić klip Adsterra. Przycisk pobierania odblokuje się dopiero po zakończeniu.",
-    progress: (seconds) => `${seconds} s`,
-    thanks: "Dziękujemy za obejrzenie. Możesz zapisać tabelę na urządzeniu.",
-    close: "Zamknij",
-    slotLabel: "Klip sponsora Adsterra",
-  },
-  toolAd: {
-    sponsored: "Sponsorowane",
-    slotTitle: "Miejsce na reklamę",
-    slotHint: "Reklamy partnerów pomagają utrzymać PureTable bezpłatnym.",
   },
   common: { backToTools: "Wróć do narzędzi" },
   tools: {

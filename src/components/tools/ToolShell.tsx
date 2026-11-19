@@ -4,7 +4,6 @@ import { ArrowLeft, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { AdBanner } from "@/components/ads/AdBanner";
 import { PrivacyBanner } from "@/components/layout/PrivacyBanner";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { useI18n } from "@/i18n/context";
@@ -63,12 +62,9 @@ export function ToolShell({
           className,
         )}
       >
-        <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_min(100%,17.5rem)] lg:items-start lg:gap-8">
-          <div className="relative z-10 min-w-0 space-y-8">
-            {children}
-            <PageSeoSection content={seoContent} />
-          </div>
-          <AdBanner className="lg:sticky lg:top-6 lg:self-start" />
+        <div className="relative z-10 min-w-0 space-y-8">
+          {children}
+          <PageSeoSection content={seoContent} />
         </div>
       </main>
     </div>

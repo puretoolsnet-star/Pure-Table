@@ -4,7 +4,6 @@ import { ArrowLeft, PenLine, Search, Sheet, Upload } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 
-import { AdBanner } from "@/components/ads/AdBanner";
 import { TableExportPanel } from "@/components/table/TableExportPanel";
 import { TableToolbarSection } from "@/components/table/TableToolbarSection";
 import { FileDropzone } from "@/components/tools/FileDropzone";
@@ -182,8 +181,7 @@ export function TableWorkspace() {
       </header>
 
       <main className="relative z-10 mx-auto flex w-full min-w-0 max-w-6xl flex-1 flex-col gap-6 px-4 pb-[max(4rem,env(safe-area-inset-bottom))] pt-8 sm:px-6 md:px-8 md:pb-16">
-        <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_min(100%,18rem)] xl:items-start">
-          <div className="min-w-0 space-y-4" aria-label={t.tableStudio.toolbarAria}>
+        <div className="min-w-0 space-y-4" aria-label={t.tableStudio.toolbarAria}>
             <TableToolbarSection icon={Upload} title={t.tableStudio.categories.importData}>
               <p className="text-xs leading-relaxed text-gray-500">{t.tableStudio.importHint}</p>
               <FileDropzone
@@ -412,8 +410,6 @@ export function TableWorkspace() {
               variant="studio"
             />
             <PageSeoSection content={seoContent} />
-          </div>
-          <AdBanner className="xl:sticky xl:top-6 xl:self-start" />
         </div>
       </main>
     </div>

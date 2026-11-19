@@ -1,13 +1,11 @@
 "use client";
 
 import { Download, FileCode, FileJson, Table2 } from "lucide-react";
-import type { ReactNode } from "react";
 
 import { useI18n } from "@/i18n/context";
 import { downloadHtml, downloadMarkdown, downloadSql } from "@/lib/table/export-formats";
 import { LARGE_TABLE_ROW_THRESHOLD, downloadSheets } from "@/lib/table/export-table";
 import type { TableSheet } from "@/lib/table/types";
-import { useMandatoryAd } from "@/lib/use-mandatory-ad";
 import { cn } from "@/lib/cn";
 
 type ExportFormat = "xlsx" | "csv" | "md" | "sql" | "html";
@@ -26,12 +24,11 @@ export function TableExportPanel({
   sqlTableName: string;
 }) {
   const { t } = useI18n();
-  const { requestDownload, modal } = useMandatoryAd();
-  const needsAd = rowCount >= LARGE_TABLE_ROW_THRESHOLD;
+  const isLarge = rowCount >= LARGE_TABLE_ROW_THRESHOLD;
 
-  const trigger = (format: ExportFormat, label: string, action: () => void | Promise<void>) => {
+  const trigger = (action: () => void | Promise<void>) => {
     if (!ready) return;
-    requestDownload(action, label, { requiresAd: needsAd });
+    void action();
   };
 
   const buttons: Array<{
@@ -76,7 +73,7 @@ export function TableExportPanel({
 
   return (
     <div className="space-y-3">
-      {needsAd && ready && (
+      {isLarge && ready && (
         <p className="text-sm leading-relaxed text-cyan-200/80">{t.tableStudio.largeExportHint}</p>
       )}
       <div className="grid grid-cols-1 gap-2 min-[480px]:grid-cols-2">
@@ -85,7 +82,7 @@ export function TableExportPanel({
             key={format}
             type="button"
             disabled={!ready}
-            onClick={() => trigger(format, label, action)}
+            onClick={() => trigger(action)}
             className={cn(
               "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition",
               primary
@@ -99,7 +96,6 @@ export function TableExportPanel({
           </button>
         ))}
       </div>
-      {modal as ReactNode}
     </div>
   );
 }
