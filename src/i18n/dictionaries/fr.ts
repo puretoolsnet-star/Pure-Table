@@ -24,6 +24,10 @@ export const fr: Dictionary = {
       purepdf: { name: "PurePDF", tagline: "Outils de traitement PDF rapides." },
       pureQr: { name: "PureQR", tagline: "Générateur et gestionnaire de codes QR." },
       pureSign: { name: "PureSign", tagline: "Signer et remplir des PDF localement." },
+      pureImage: {
+        name: "PureImage",
+        tagline: "Outils image exécutés localement dans le navigateur.",
+      },
       pureTable: {
         name: "PureTable",
         tagline: "Utilitaire métier pour analyser les factures.",

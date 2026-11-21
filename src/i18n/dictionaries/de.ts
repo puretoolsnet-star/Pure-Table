@@ -27,6 +27,10 @@ export const de: Dictionary = {
         name: "PureSign",
         tagline: "PDF-Dokumente lokal signieren und ausfüllen.",
       },
+      pureImage: {
+        name: "PureImage",
+        tagline: "Bildtools, die lokal im Browser laufen.",
+      },
       pureTable: {
         name: "PureTable",
         tagline: "Geschäftsdienstprogramm zum Parsen von Rechnungen.",

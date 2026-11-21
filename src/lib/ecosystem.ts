@@ -2,7 +2,12 @@ import type { Locale } from "@/i18n/locales";
 import { LOCALES } from "@/i18n/locales";
 import { localizedPath } from "@/lib/i18n/routing";
 
-export type EcosystemProjectId = "purepdf" | "pureQr" | "pureSign" | "pureTable";
+export type EcosystemProjectId =
+  | "purepdf"
+  | "pureQr"
+  | "pureSign"
+  | "pureImage"
+  | "pureTable";
 
 export type EcosystemProjectStatus = "active" | "comingSoon";
 
@@ -33,8 +38,13 @@ const pureSignOrigin = origin(
   "https://sign.kixt.net",
 );
 
+const pureImageOrigin = origin(
+  process.env.NEXT_PUBLIC_ECOSYSTEM_PUREIMAGE_URL,
+  "https://img.kixt.net",
+);
+
 /**
- * Order: PurePDF → PureQR → PureSign → PureTable.
+ * Order: PurePDF → PureQR → PureSign → PureImage → PureTable.
  * PureTable is the current app.
  */
 export const ECOSYSTEM_PROJECTS: EcosystemProjectMeta[] = [
@@ -54,6 +64,12 @@ export const ECOSYSTEM_PROJECTS: EcosystemProjectMeta[] = [
     id: "pureSign",
     status: "active",
     href: pureSignOrigin,
+    external: true,
+  },
+  {
+    id: "pureImage",
+    status: "active",
+    href: pureImageOrigin,
     external: true,
   },
   { id: "pureTable", status: "active", href: "/" },
