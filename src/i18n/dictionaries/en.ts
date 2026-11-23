@@ -22,6 +22,10 @@ export const en: Dictionary = {
     close: "Close ecosystem menu",
     items: {
       purepdf: { name: "PurePDF", tagline: "Fast PDF processing tools." },
+      pureConvert: {
+        name: "PureConvert",
+        tagline: "File format conversion — processed locally in your browser.",
+      },
       pureQr: { name: "PureQR", tagline: "Modern QR code generator & manager." },
       pureSign: { name: "PureSign", tagline: "Sign and fill PDF documents locally." },
       pureImage: {

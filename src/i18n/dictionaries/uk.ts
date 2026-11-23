@@ -22,6 +22,10 @@ export const uk: Dictionary = {
     close: "Закрити меню екосистеми",
     items: {
       purepdf: { name: "PurePDF", tagline: "Інструменти для роботи з PDF." },
+      pureConvert: {
+        name: "PureConvert",
+        tagline: "Конвертація форматів файлів — локально у браузері.",
+      },
       pureQr: { name: "PureQR", tagline: "Генератор та менеджер QR-кодів." },
       pureSign: { name: "PureSign", tagline: "Підпис та заповнення PDF локально." },
       pureImage: {

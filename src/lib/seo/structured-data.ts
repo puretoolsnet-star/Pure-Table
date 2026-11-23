@@ -15,6 +15,7 @@ function siblingOrigin(name: string, fallback: string): string | null {
 function ecosystemRelatedUrls(): string[] {
   return [
     siblingOrigin("NEXT_PUBLIC_ECOSYSTEM_PUREPDF_URL", "https://pdf.kixt.net"),
+    siblingOrigin("NEXT_PUBLIC_ECOSYSTEM_PURECONVERT_URL", "https://convert.kixt.net"),
     siblingOrigin("NEXT_PUBLIC_ECOSYSTEM_PUREQR_URL", "https://qr.kixt.net"),
     siblingOrigin("NEXT_PUBLIC_ECOSYSTEM_PURESIGN_URL", "https://sign.kixt.net"),
     siblingOrigin("NEXT_PUBLIC_ECOSYSTEM_PUREIMAGE_URL", "https://img.kixt.net"),
