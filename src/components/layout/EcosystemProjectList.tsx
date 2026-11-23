@@ -1,6 +1,6 @@
 "use client";
 
-import { FileSpreadsheet, Image, PenLine, QrCode, Sparkles } from "lucide-react";
+import { FileSpreadsheet, Image, PenLine, QrCode, Sparkles, Type } from "lucide-react";
 import Link from "next/link";
 
 import { useI18n } from "@/i18n/context";
@@ -16,6 +16,7 @@ const PROJECT_ICONS: Record<EcosystemProjectId, typeof Sparkles> = {
   pureQr: QrCode,
   pureSign: PenLine,
   pureImage: Image,
+  pureText: Type,
   pureTable: FileSpreadsheet,
 };
 

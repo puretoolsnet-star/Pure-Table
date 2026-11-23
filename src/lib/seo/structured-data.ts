@@ -18,6 +18,7 @@ function ecosystemRelatedUrls(): string[] {
     siblingOrigin("NEXT_PUBLIC_ECOSYSTEM_PUREQR_URL", "https://qr.kixt.net"),
     siblingOrigin("NEXT_PUBLIC_ECOSYSTEM_PURESIGN_URL", "https://sign.kixt.net"),
     siblingOrigin("NEXT_PUBLIC_ECOSYSTEM_PUREIMAGE_URL", "https://img.kixt.net"),
+    siblingOrigin("NEXT_PUBLIC_ECOSYSTEM_PURETEXT_URL", "https://text.kixt.net"),
   ]
     .filter((origin): origin is string => Boolean(origin))
     .map((origin) => `${origin}${localizedPath(DEFAULT_LOCALE, "/")}`);

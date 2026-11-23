@@ -28,6 +28,10 @@ export const en: Dictionary = {
         name: "PureImage",
         tagline: "Image tools that run locally in your browser.",
       },
+      pureText: {
+        name: "PureText",
+        tagline: "Text tools — processed locally in your browser.",
+      },
       pureTable: {
         name: "PureTable",
         tagline: "Business utility for parsing invoices into Excel/CSV.",

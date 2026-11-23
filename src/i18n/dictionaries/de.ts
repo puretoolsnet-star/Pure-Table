@@ -31,6 +31,10 @@ export const de: Dictionary = {
         name: "PureImage",
         tagline: "Bildtools, die lokal im Browser laufen.",
       },
+      pureText: {
+        name: "PureText",
+        tagline: "Texttools — lokal in Ihrem Browser.",
+      },
       pureTable: {
         name: "PureTable",
         tagline: "Geschäftsdienstprogramm zum Parsen von Rechnungen.",

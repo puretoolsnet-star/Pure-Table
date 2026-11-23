@@ -7,6 +7,7 @@ export type EcosystemProjectId =
   | "pureQr"
   | "pureSign"
   | "pureImage"
+  | "pureText"
   | "pureTable";
 
 export type EcosystemProjectStatus = "active" | "comingSoon";
@@ -43,8 +44,13 @@ const pureImageOrigin = origin(
   "https://img.kixt.net",
 );
 
+const pureTextOrigin = origin(
+  process.env.NEXT_PUBLIC_ECOSYSTEM_PURETEXT_URL,
+  "https://text.kixt.net",
+);
+
 /**
- * Order: PurePDF → PureQR → PureSign → PureImage → PureTable.
+ * Order: PurePDF → PureQR → PureSign → PureImage → PureText → PureTable.
  * PureTable is the current app.
  */
 export const ECOSYSTEM_PROJECTS: EcosystemProjectMeta[] = [
@@ -70,6 +76,12 @@ export const ECOSYSTEM_PROJECTS: EcosystemProjectMeta[] = [
     id: "pureImage",
     status: "active",
     href: pureImageOrigin,
+    external: true,
+  },
+  {
+    id: "pureText",
+    status: "active",
+    href: pureTextOrigin,
     external: true,
   },
   { id: "pureTable", status: "active", href: "/" },

@@ -28,6 +28,10 @@ export const uk: Dictionary = {
         name: "PureImage",
         tagline: "Інструменти для зображень — локально у браузері.",
       },
+      pureText: {
+        name: "PureText",
+        tagline: "Інструменти для тексту — локально у браузері.",
+      },
       pureTable: {
         name: "PureTable",
         tagline: "Бізнес-утиліта для парсингу накладних у Excel/CSV.",
