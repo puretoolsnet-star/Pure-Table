@@ -1,3 +1,4 @@
+import { strToU8, zipSync } from "fflate";
 import type QRCodeType from "qrcode";
 
 import { triggerTextDownload } from "@/lib/table/export-table";
@@ -9,43 +10,118 @@ export type CodeItem = {
   label: string;
   code: string;
   dataUrl: string;
+  rowIndex: number;
 };
 
-async function renderCode(code: string, mode: QrCodeMode): Promise<string> {
-  if (!code.trim()) return "";
-  if (mode === "qr") {
-    const QRCode = (await import("qrcode")).default as typeof QRCodeType;
-    return QRCode.toDataURL(code, { margin: 1, width: 256 });
+export type CodeSkipReason = "empty" | "invalid-barcode" | "render-failed";
+
+export type SkippedCodeRow = {
+  rowIndex: number;
+  label: string;
+  code: string;
+  reason: CodeSkipReason;
+};
+
+export type CodeBuildResult = {
+  items: CodeItem[];
+  skipped: SkippedCodeRow[];
+  stats: { generated: number; skipped: number };
+};
+
+/** CODE128 via JsBarcode: printable ASCII only (space through tilde). */
+export function isValidCode128(value: string): boolean {
+  const text = value.trim();
+  if (!text || text.length > 80) return false;
+  for (let index = 0; index < text.length; index += 1) {
+    const code = text.charCodeAt(index);
+    if (code < 32 || code > 126) return false;
   }
-  const JsBarcode = (await import("jsbarcode")).default;
-  const canvas = document.createElement("canvas");
-  JsBarcode(canvas, code, {
-    format: "CODE128",
-    displayValue: true,
-    fontSize: 14,
-    margin: 8,
-    background: "#ffffff",
-    lineColor: "#020617",
-  });
-  return canvas.toDataURL("image/png");
+  return true;
 }
 
+async function renderCode(code: string, mode: QrCodeMode): Promise<string> {
+  const payload = code.trim();
+  if (!payload) return "";
+  if (mode === "barcode" && !isValidCode128(payload)) return "";
+
+  try {
+    if (mode === "qr") {
+      const QRCode = (await import("qrcode")).default as typeof QRCodeType;
+      return QRCode.toDataURL(payload, { margin: 1, width: 256, errorCorrectionLevel: "M" });
+    }
+    const JsBarcode = (await import("jsbarcode")).default;
+    const canvas = document.createElement("canvas");
+    JsBarcode(canvas, payload, {
+      format: "CODE128",
+      displayValue: true,
+      fontSize: 14,
+      margin: 8,
+      background: "#ffffff",
+      lineColor: "#020617",
+    });
+    return canvas.toDataURL("image/png");
+  } catch {
+    return "";
+  }
+}
+
+export type BuildCodeItemsOptions = {
+  nameColumn: number | null;
+  codeColumn: number;
+  mode: QrCodeMode;
+};
+
 export async function buildCodeItems(
+  table: ParsedTable,
+  options: BuildCodeItemsOptions,
+): Promise<CodeBuildResult> {
+  const { nameColumn, codeColumn, mode } = options;
+  const items: CodeItem[] = [];
+  const skipped: SkippedCodeRow[] = [];
+
+  for (let rowIndex = 0; rowIndex < table.rows.length; rowIndex += 1) {
+    const row = table.rows[rowIndex];
+    const code = (row[codeColumn] ?? "").trim();
+    const label =
+      nameColumn === null
+        ? code
+        : (row[nameColumn] ?? code).trim() || code;
+
+    if (!code) {
+      skipped.push({ rowIndex, label, code, reason: "empty" });
+      continue;
+    }
+
+    if (mode === "barcode" && !isValidCode128(code)) {
+      skipped.push({ rowIndex, label, code, reason: "invalid-barcode" });
+      continue;
+    }
+
+    const dataUrl = await renderCode(code, mode);
+    if (!dataUrl) {
+      skipped.push({ rowIndex, label, code, reason: "render-failed" });
+      continue;
+    }
+
+    items.push({ label, code, dataUrl, rowIndex });
+  }
+
+  return {
+    items,
+    skipped,
+    stats: { generated: items.length, skipped: skipped.length },
+  };
+}
+
+/** Back-compat wrapper for older call sites. */
+export async function buildCodeItemsLegacy(
   table: ParsedTable,
   nameColumn: number,
   codeColumn: number,
   mode: QrCodeMode,
 ): Promise<CodeItem[]> {
-  const items: CodeItem[] = [];
-  for (const row of table.rows) {
-    const code = (row[codeColumn] ?? "").trim();
-    if (!code) continue;
-    const label = (row[nameColumn] ?? code).trim();
-    const dataUrl = await renderCode(code, mode);
-    if (!dataUrl) continue;
-    items.push({ label, code, dataUrl });
-  }
-  return items;
+  const result = await buildCodeItems(table, { nameColumn, codeColumn, mode });
+  return result.items;
 }
 
 export function buildCodeGalleryHtml(items: CodeItem[], title: string): string {
@@ -88,4 +164,65 @@ function escapeHtml(value: string): string {
 
 export function downloadCodeGallery(filenameBase: string, html: string) {
   triggerTextDownload(html, `${filenameBase}.html`, "text/html;charset=utf-8");
+}
+
+function triggerBlobDownload(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
+function dataUrlToBytes(dataUrl: string): Uint8Array {
+  const base64 = dataUrl.includes(",") ? dataUrl.split(",")[1] : dataUrl;
+  const binary = atob(base64 ?? "");
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+  return bytes;
+}
+
+export function safeCodeFilename(
+  label: string,
+  code: string,
+  index: number,
+  ext: string,
+): string {
+  const sanitize = (part: string) =>
+    part
+      .replace(/[\\/:*?"<>|]/g, "_")
+      .replace(/\s+/g, " ")
+      .trim();
+  const namePart = sanitize(label || code || `item-${index + 1}`).slice(0, 72);
+  const codePart = sanitize(code).slice(0, 32);
+  const ordinal = String(index + 1).padStart(3, "0");
+  const base = codePart ? `${ordinal}-${namePart}__${codePart}` : `${ordinal}-${namePart}`;
+  return `${base}.${ext}`;
+}
+
+export function downloadCodeZip(filenameBase: string, items: CodeItem[]) {
+  if (items.length === 0) return;
+
+  const used = new Set<string>();
+  const files: Record<string, Uint8Array> = {};
+
+  items.forEach((item, index) => {
+    let name = safeCodeFilename(item.label, item.code, index, "png");
+    if (used.has(name)) {
+      name = safeCodeFilename(item.label, `${item.code}-${index}`, index, "png");
+    }
+    used.add(name);
+    files[name] = dataUrlToBytes(item.dataUrl);
+  });
+
+  const indexLines = items.map(
+    (item, index) => `${index + 1}\t${item.label}\t${item.code}\t${safeCodeFilename(item.label, item.code, index, "png")}`,
+  );
+  files["index.txt"] = strToU8(`\uFEFF${indexLines.join("\n")}\n`);
+
+  const zipped = zipSync(files, { level: 6 });
+  triggerBlobDownload(new Blob([zipped], { type: "application/zip" }), `${filenameBase}.zip`);
 }

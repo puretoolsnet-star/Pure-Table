@@ -1,15 +1,7 @@
-import type { Locale } from "@/i18n/locales";
 import { wordsToTable, type OcrWord } from "@/lib/table/ocr-layout";
 import type { ParsedTable } from "@/lib/table/types";
 
-const LANG_BY_LOCALE: Record<Locale, string> = {
-  uk: "ukr+eng",
-  en: "eng",
-  de: "deu+eng",
-  fr: "fra+eng",
-  es: "spa+eng",
-  pl: "pol+eng",
-};
+export type OcrProgressPhase = "loading" | "recognizing";
 
 type OcrWorker = {
   lang: string;
@@ -17,7 +9,7 @@ type OcrWorker = {
     image: string,
     options?: object,
     output?: { blocks?: boolean; text?: boolean },
-  ) => Promise<{ data: { blocks: OcrBlock[] | null } }>;
+  ) => Promise<{ data: { blocks: OcrBlock[] | null; text: string } }>;
   setParameters: (params: Record<string, string>) => Promise<unknown>;
   terminate: () => Promise<unknown>;
 };
@@ -25,6 +17,7 @@ type OcrWorker = {
 type OcrBlock = {
   paragraphs?: Array<{
     lines?: Array<{
+      text?: string;
       words?: Array<{
         text: string;
         confidence: number;
@@ -37,7 +30,28 @@ type OcrBlock = {
 let active: { lang: string; worker: OcrWorker } | null = null;
 let pending: Promise<OcrWorker> | null = null;
 
-async function getWorker(lang: string, onProgress?: (ratio: number) => void): Promise<OcrWorker> {
+let progressSink: ((phase: OcrProgressPhase, ratio: number) => void) | null = null;
+
+const LOADING_STATUSES = new Set([
+  "loading tesseract core",
+  "initializing tesseract",
+  "loading language traineddata",
+  "initializing api",
+  "downloading tesseract core",
+]);
+
+function ocrLogger(message: { status?: string; progress?: number }) {
+  if (!progressSink || message.status === undefined) return;
+  if (message.status === "recognizing text") {
+    progressSink("recognizing", message.progress ?? 0);
+    return;
+  }
+  if (LOADING_STATUSES.has(message.status)) {
+    progressSink("loading", message.progress ?? 0);
+  }
+}
+
+async function getWorker(lang: string): Promise<OcrWorker> {
   if (active?.lang === lang) return active.worker;
   if (pending) {
     const worker = await pending;
@@ -51,10 +65,7 @@ async function getWorker(lang: string, onProgress?: (ratio: number) => void): Pr
     }
     const { createWorker, PSM } = await import("tesseract.js");
     const worker = (await createWorker(lang, 1, {
-      logger: (message) => {
-        if (!onProgress) return;
-        if (message.status === "recognizing text") onProgress(message.progress ?? 0);
-      },
+      logger: ocrLogger,
     })) as unknown as OcrWorker;
     await worker.setParameters({
       tessedit_pageseg_mode: PSM.AUTO,
@@ -92,15 +103,42 @@ function collectWords(blocks: OcrBlock[] | null): OcrWord[] {
   return words;
 }
 
+function blocksToRawText(blocks: OcrBlock[] | null, fallback: string): string {
+  const lines: string[] = [];
+  for (const block of blocks ?? []) {
+    for (const paragraph of block.paragraphs ?? []) {
+      for (const line of paragraph.lines ?? []) {
+        const fromWords = (line.words ?? []).map((word) => word.text).join(" ").trim();
+        const text = line.text?.trim() || fromWords;
+        if (text) lines.push(text);
+      }
+    }
+  }
+  const joined = lines.join("\n").trim();
+  return joined || fallback.trim();
+}
+
+export type OcrRecognizeResult = {
+  table: ParsedTable;
+  rawText: string;
+};
+
 export async function recognizeTable(
   image: string,
-  locale: Locale,
+  lang: string,
   columnLabel: (index: number) => string,
-  onProgress?: (ratio: number) => void,
-): Promise<ParsedTable> {
-  const worker = await getWorker(LANG_BY_LOCALE[locale], onProgress);
-  const result = await worker.recognize(image, { rotateAuto: true }, { blocks: true, text: true });
-  return wordsToTable(collectWords(result.data.blocks), columnLabel);
+  onProgress?: (phase: OcrProgressPhase, ratio: number) => void,
+): Promise<OcrRecognizeResult> {
+  progressSink = onProgress ?? null;
+  try {
+    const worker = await getWorker(lang);
+    const result = await worker.recognize(image, { rotateAuto: true }, { blocks: true, text: true });
+    const rawText = blocksToRawText(result.data.blocks, result.data.text ?? "");
+    const table = wordsToTable(collectWords(result.data.blocks), columnLabel);
+    return { table, rawText };
+  } finally {
+    progressSink = null;
+  }
 }
 
 export async function releaseOcrWorker() {

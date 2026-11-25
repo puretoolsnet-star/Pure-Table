@@ -4,33 +4,55 @@ import { Barcode } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 
 import { FileDropzone } from "@/components/tools/FileDropzone";
+import { TablePreview } from "@/components/tools/TablePreview";
 import { ToolShell } from "@/components/tools/ToolShell";
 import { useI18n } from "@/i18n/context";
+import type { Locale } from "@/i18n/locales";
+import { cn } from "@/lib/cn";
 import { readSpreadsheet } from "@/lib/table/read-file";
-import { TEXT_SAMPLE } from "@/lib/table/samples";
+import { QR_SAMPLE_BY_LOCALE } from "@/lib/table/samples";
 import { textToTable } from "@/lib/table/split-text";
 import {
   buildCodeGalleryHtml,
   buildCodeItems,
   downloadCodeGallery,
+  downloadCodeZip,
+  type CodeBuildResult,
   type CodeItem,
+  type CodeSkipReason,
   type QrCodeMode,
 } from "@/lib/table/qr-gallery";
 import type { ParsedTable } from "@/lib/table/types";
-import { cn } from "@/lib/cn";
 
 const SPREADSHEET =
   ".csv,.xlsx,.xls,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
+const PREVIEW_LIMIT = 36;
+
+function clampIndex(index: number, width: number): number {
+  if (width <= 0) return 0;
+  return Math.max(0, Math.min(index, width - 1));
+}
+
+const pasteClass =
+  "glass-card min-h-[min(10rem,28dvh)] w-full max-w-full resize-y rounded-2xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-base text-white outline-none placeholder:text-slate-500 focus:border-primary/50 sm:text-sm";
+
+const selectClass =
+  "w-full rounded-xl border border-slate-800 bg-slate-900 px-3 py-2.5 text-sm text-white outline-none focus:border-primary/50 disabled:opacity-50";
+
 export function QrGeneratorTool() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [table, setTable] = useState<ParsedTable>({ headers: [], rows: [] });
+  const [paste, setPaste] = useState("");
+  const [useNameColumn, setUseNameColumn] = useState(true);
   const [nameColumn, setNameColumn] = useState(0);
   const [codeColumn, setCodeColumn] = useState(1);
   const [mode, setMode] = useState<QrCodeMode>("qr");
-  const [items, setItems] = useState<CodeItem[]>([]);
+  const [result, setResult] = useState<CodeBuildResult | null>(null);
+  const [showAllPreview, setShowAllPreview] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+
   const width = useMemo(
     () =>
       Math.max(
@@ -54,10 +76,19 @@ export function QrGeneratorTool() {
       const file = files[0];
       if (!file) return;
       setError("");
+      if (!/\.(csv|xlsx|xls)$/i.test(file.name)) {
+        setError(t.workspace.unsupportedFile);
+        return;
+      }
       try {
-        const parsed = await readSpreadsheet(file, t.workspace.columnLabel);
+        const { table: parsed } = await readSpreadsheet(file, t.workspace.columnLabel);
+        if (parsed.headers.length === 0 && parsed.rows.length === 0) {
+          setError(t.workspace.parseFailed);
+          return;
+        }
         setTable(parsed);
-        setItems([]);
+        setPaste("");
+        setResult(null);
       } catch {
         setError(t.workspace.parseFailed);
       }
@@ -65,72 +96,204 @@ export function QrGeneratorTool() {
     [t],
   );
 
+  const parsePaste = useCallback(() => {
+    const parsed = textToTable(paste, {
+      delimiter: "auto",
+      header: true,
+      columnLabel: t.workspace.columnLabel,
+    });
+    setTable(parsed);
+    setResult(null);
+    setError(parsed.rows.length === 0 ? t.workspace.emptyPreview : "");
+  }, [paste, t]);
+
   const loadSample = useCallback(() => {
-    const parsed = textToTable(TEXT_SAMPLE, {
+    const raw = QR_SAMPLE_BY_LOCALE[locale as Locale];
+    setPaste(raw);
+    const parsed = textToTable(raw, {
       delimiter: "semicolon",
       header: true,
       columnLabel: t.workspace.columnLabel,
     });
     setTable(parsed);
-    setItems([]);
+    setResult(null);
+    setNameColumn(0);
+    setCodeColumn(1);
+    setUseNameColumn(true);
     setError("");
-  }, [t]);
+  }, [locale, t]);
+
+  const skipLabel = useCallback(
+    (reason: CodeSkipReason): string => {
+      switch (reason) {
+        case "empty":
+          return t.workspace.qrSkipEmpty;
+        case "invalid-barcode":
+          return t.workspace.qrSkipInvalidBarcode;
+        case "render-failed":
+          return t.workspace.qrSkipFailed;
+      }
+    },
+    [t],
+  );
 
   const generate = useCallback(async () => {
     setBusy(true);
     setError("");
+    setShowAllPreview(false);
     try {
-      const next = await buildCodeItems(table, nameColumn, codeColumn, mode);
-      setItems(next);
-      if (next.length === 0) setError(t.workspace.qrEmpty);
+      const next = await buildCodeItems(table, {
+        nameColumn: useNameColumn ? clampIndex(nameColumn, width) : null,
+        codeColumn: clampIndex(codeColumn, width),
+        mode,
+      });
+      setResult(next);
+      if (next.items.length === 0) {
+        setError(
+          next.skipped.length > 0 && mode === "barcode"
+            ? t.workspace.qrEmptyBarcode
+            : t.workspace.qrEmpty,
+        );
+      }
     } catch {
       setError(t.workspace.qrFailed);
+      setResult(null);
     } finally {
       setBusy(false);
     }
-  }, [table, nameColumn, codeColumn, mode, t]);
+  }, [table, useNameColumn, nameColumn, codeColumn, mode, width, t]);
 
-  const selectClass =
-    "w-full rounded-xl border border-gray-800 bg-gray-900 px-3 py-2.5 text-sm text-white outline-none focus:border-cyan-500/50";
+  const items: CodeItem[] = result?.items ?? [];
+  const previewItems = showAllPreview ? items : items.slice(0, PREVIEW_LIMIT);
 
   return (
     <ToolShell toolId="qr-generator" icon={Barcode}>
-      <div className="space-y-5">
+      <div className="min-w-0 space-y-5">
+        <p className="rounded-2xl border border-slate-800 bg-slate-900/50 px-4 py-3 text-sm leading-relaxed text-slate-400">
+          {t.workspace.qrLocalHint}
+        </p>
+
         <FileDropzone
           accept={SPREADSHEET}
+          multiple={false}
           title={t.workspace.dropTitle}
           hint={t.workspace.dropHint}
           onFiles={(files) => void loadFile(files)}
         />
-        <button
-          type="button"
-          onClick={loadSample}
-          className="rounded-xl border border-gray-700 px-4 py-2 text-sm text-gray-200 hover:border-cyan-500/40"
-        >
-          {t.workspace.loadSample}
-        </button>
+
+        <label className="block min-w-0">
+          <span className="mb-2 block text-sm font-medium text-slate-200">{t.workspace.pasteLabel}</span>
+          <textarea
+            value={paste}
+            onChange={(event) => setPaste(event.target.value)}
+            placeholder={t.workspace.pastePlaceholder}
+            className={pasteClass}
+            spellCheck={false}
+          />
+        </label>
+
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={parsePaste}
+            className="min-h-11 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+          >
+            {t.tableStudio.parsePasted}
+          </button>
+          <button
+            type="button"
+            onClick={loadSample}
+            className="min-h-11 rounded-xl border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 hover:border-slate-500"
+          >
+            {t.workspace.qrSample}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setTable({ headers: [], rows: [] });
+              setPaste("");
+              setResult(null);
+              setError("");
+            }}
+            className="min-h-11 rounded-xl border border-slate-800 px-4 py-2 text-sm text-slate-400 hover:text-white"
+          >
+            {t.workspace.clear}
+          </button>
+        </div>
+
         {error && <p className="text-sm text-amber-200/90">{error}</p>}
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <label className="block min-w-0">
-            <span className="mb-2 block text-sm text-gray-300">{t.workspace.qrNameColumn}</span>
-            <select
-              value={nameColumn}
-              onChange={(event) => setNameColumn(Number(event.target.value))}
-              className={selectClass}
-              disabled={width === 0}
-            >
-              {columnOptions.map((option) => (
-                <option key={option.index} value={option.index}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+        <TablePreview
+          title={`${t.workspace.sheetItems} · ${t.workspace.rowCount(table.rows.length)}`}
+          headers={table.headers}
+          rows={table.rows.slice(0, 12)}
+          emptyLabel={t.workspace.emptyPreview}
+          mobileScrollHint={t.tableStudio.mobileScrollHint}
+        />
+
+        <fieldset className="min-w-0 space-y-3">
+          <legend className="text-sm font-semibold text-white">{t.workspace.qrFormatLabel}</legend>
+          <div className="flex flex-wrap gap-2">
+            {(
+              [
+                ["qr", t.workspace.qrFormatQr],
+                ["barcode", t.workspace.qrFormatBarcode],
+              ] as const
+            ).map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => {
+                  setMode(id);
+                  setResult(null);
+                }}
+                className={cn(
+                  "min-h-11 rounded-xl border px-4 py-2 text-sm font-medium",
+                  mode === id
+                    ? "border-primary/60 bg-primary/15 text-white"
+                    : "border-slate-700 text-slate-300 hover:border-slate-500",
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          {mode === "barcode" && (
+            <p className="text-xs leading-relaxed text-slate-500">{t.workspace.qrCode128Hint}</p>
+          )}
+        </fieldset>
+
+        <div className="grid min-w-0 gap-3 sm:grid-cols-2">
+          <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/40 px-4 py-2 text-sm text-slate-200 sm:col-span-2">
+            <input
+              type="checkbox"
+              checked={useNameColumn}
+              onChange={(e) => setUseNameColumn(e.target.checked)}
+              className="h-5 w-5 accent-primary"
+            />
+            {t.workspace.qrUseNameColumn}
           </label>
+          {useNameColumn && (
+            <label className="block min-w-0">
+              <span className="mb-2 block text-xs font-medium text-slate-400">{t.workspace.qrNameColumn}</span>
+              <select
+                value={clampIndex(nameColumn, columnOptions.length)}
+                onChange={(event) => setNameColumn(Number(event.target.value))}
+                className={selectClass}
+                disabled={width === 0}
+              >
+                {columnOptions.map((option) => (
+                  <option key={option.index} value={option.index}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <label className="block min-w-0">
-            <span className="mb-2 block text-sm text-gray-300">{t.workspace.qrCodeColumn}</span>
+            <span className="mb-2 block text-xs font-medium text-slate-400">{t.workspace.qrCodeColumn}</span>
             <select
-              value={codeColumn}
+              value={clampIndex(codeColumn, columnOptions.length)}
               onChange={(event) => setCodeColumn(Number(event.target.value))}
               className={selectClass}
               disabled={width === 0}
@@ -144,83 +307,98 @@ export function QrGeneratorTool() {
           </label>
         </div>
 
-        <fieldset>
-          <legend className="mb-2 text-sm font-medium text-gray-200">{t.workspace.qrFormatLabel}</legend>
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => setMode("qr")}
-              className={cn(
-                "rounded-lg px-3 py-1.5 text-sm font-medium",
-                mode === "qr"
-                  ? "bg-cyan-500 text-gray-950"
-                  : "border border-gray-700 text-gray-200",
-              )}
-            >
-              {t.workspace.qrFormatQr}
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode("barcode")}
-              className={cn(
-                "rounded-lg px-3 py-1.5 text-sm font-medium",
-                mode === "barcode"
-                  ? "bg-cyan-500 text-gray-950"
-                  : "border border-gray-700 text-gray-200",
-              )}
-            >
-              {t.workspace.qrFormatBarcode}
-            </button>
-          </div>
-        </fieldset>
-
         <button
           type="button"
           disabled={table.rows.length === 0 || busy}
           onClick={() => void generate()}
-          className="rounded-xl bg-cyan-500 px-4 py-2 text-sm font-semibold text-gray-950 hover:bg-cyan-400 disabled:opacity-50"
+          className="min-h-11 w-full rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-white disabled:opacity-50 sm:w-auto"
         >
           {busy ? t.workspace.qrGenerating : t.workspace.qrGenerate}
         </button>
 
+        {result && (
+          <p className="text-sm text-slate-300">
+            {t.workspace.qrStats(result.stats.generated, result.stats.skipped)}
+          </p>
+        )}
+
         {items.length > 0 && (
           <section className="min-w-0">
             <h2 className="mb-3 text-sm font-semibold text-white">{t.workspace.qrPreviewTitle}</h2>
-            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {items.slice(0, 24).map((item) => (
+            <ul className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {previewItems.map((item) => (
                 <li
-                  key={`${item.code}-${item.label}`}
-                  className="rounded-2xl border border-gray-800 bg-gray-900/70 p-3"
+                  key={`${item.rowIndex}-${item.code}`}
+                  className="min-w-0 rounded-2xl border border-slate-800 bg-slate-900/70 p-3"
                 >
-                  <img
-                    src={item.dataUrl}
-                    alt={item.code}
-                    className="mx-auto max-h-40 w-full object-contain rounded-lg bg-white p-2"
-                  />
-                  <p className="mt-2 truncate text-xs font-medium text-white">{item.label}</p>
-                  <p className="truncate text-xs text-gray-500">{item.code}</p>
+                  <div className="overflow-hidden rounded-xl bg-white p-2">
+                    <img
+                      src={item.dataUrl}
+                      alt={item.code}
+                      className="mx-auto max-h-40 w-full object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                  <p className="mt-2 truncate text-sm font-medium text-white" title={item.label}>
+                    {item.label}
+                  </p>
+                  <p className="truncate text-xs text-slate-500" title={item.code}>
+                    {item.code}
+                  </p>
                 </li>
               ))}
             </ul>
-            {items.length > 24 && (
-              <p className="mt-2 text-xs text-gray-500">
-                +{items.length - 24} …
-              </p>
+            {items.length > PREVIEW_LIMIT && !showAllPreview && (
+              <button
+                type="button"
+                onClick={() => setShowAllPreview(true)}
+                className="mt-3 min-h-10 text-sm font-medium text-primary hover:underline"
+              >
+                {t.workspace.qrShowAll(items.length)}
+              </button>
             )}
           </section>
         )}
 
-        <button
-          type="button"
-          disabled={items.length === 0}
-          onClick={() => {
-            const html = buildCodeGalleryHtml(items, t.workspace.qrPreviewTitle);
-            downloadCodeGallery("puretable-codes", html);
-          }}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-gray-700 bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white hover:border-cyan-500/40 disabled:opacity-50 sm:w-auto"
-        >
-          {t.workspace.qrDownloadGallery}
-        </button>
+        {result && result.skipped.length > 0 && (
+          <section className="min-w-0 rounded-2xl border border-amber-900/40 bg-amber-950/20 p-4">
+            <h3 className="mb-2 text-sm font-semibold text-amber-100/90">{t.workspace.qrSkippedTitle}</h3>
+            <ul className="max-h-48 space-y-1 overflow-y-auto text-xs text-amber-100/80">
+              {result.skipped.slice(0, 40).map((row) => (
+                <li key={`skip-${row.rowIndex}`} className="min-w-0 truncate">
+                  <span className="text-amber-200/60">{skipLabel(row.reason)} — </span>
+                  {row.label || row.code || `#${row.rowIndex + 1}`}
+                  {row.code ? ` (${row.code})` : ""}
+                </li>
+              ))}
+            </ul>
+            {result.skipped.length > 40 && (
+              <p className="mt-2 text-xs text-amber-200/50">+{result.skipped.length - 40}</p>
+            )}
+          </section>
+        )}
+
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <button
+            type="button"
+            disabled={items.length === 0}
+            onClick={() => {
+              const html = buildCodeGalleryHtml(items, t.workspace.qrPreviewTitle);
+              downloadCodeGallery("puretable-codes", html);
+            }}
+            className="min-h-11 rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:border-primary/40 disabled:opacity-50"
+          >
+            {t.workspace.qrDownloadGallery}
+          </button>
+          <button
+            type="button"
+            disabled={items.length === 0}
+            onClick={() => downloadCodeZip("puretable-codes", items)}
+            className="min-h-11 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
+          >
+            {t.workspace.qrDownloadZip}
+          </button>
+        </div>
       </div>
     </ToolShell>
   );

@@ -28,11 +28,87 @@ Subtotal: 93.20
 VAT 20%: 18.64
 Total: 111.84`;
 
+export const INVOICE_SAMPLE: Record<Locale, string> = {
+  uk: INVOICE_SAMPLE_UK,
+  en: INVOICE_SAMPLE_EN,
+  de: `Rechnung Nr.: INV-1042
+Datum: 06.11.2026
+Lieferant: Nordlicht GmbH
+Kunde: Ada Keller
+
+Bezeichnung    Menge    Preis     Betrag
+A4 Papier      10       4,80      48,00
+Kugelschreiber 24       1,15      27,60
+Ordner         5        3,40      17,00
+
+Zwischensumme: 93,20
+MwSt 20%: 18,64
+Gesamtbetrag: 111,84`,
+  fr: `Facture n° INV-1042
+Date : 06.11.2026
+Fournisseur : Lumière SARL
+Client : Ada Martin
+
+Désignation    Qté    Prix      Montant
+Papier A4      10     4,80      48,00
+Stylos bleus   24     1,15      27,60
+Classeurs      5      3,40      17,00
+
+Sous-total : 93,20
+TVA 20 % : 18,64
+Total : 111,84`,
+  es: `Factura n° INV-1042
+Fecha: 06.11.2026
+Proveedor: Suministros Norte
+Cliente: Ada Martín
+
+Concepto       Cant.  Precio    Importe
+Papel A4       10     4,80      48,00
+Bolígrafos     24     1,15      27,60
+Carpetas       5      3,40      17,00
+
+Subtotal: 93,20
+IVA 20%: 18,64
+Total: 111,84`,
+  pl: `Faktura nr INV-1042
+Data: 06.11.2026
+Sprzedawca: Światło Sp. z o.o.
+Nabywca: Jan Kowalski
+
+Nazwa towaru   Ilość  Cena      Kwota
+Papier A4      10     4,80      48,00
+Długopisy      24     1,15      27,60
+Segregatory    5      3,40      17,00
+
+Razem: 93,20
+VAT 20%: 18,64
+Do zapłaty: 111,84`,
+};
+
 export const TEXT_SAMPLE = `Name;Phone;City;Amount
 Олена Коваленко;+380671112233;Київ;1 250,50
 Mara Keller;0049 151 23456789;Berlin;890.00
 Jean Dupont;+33 6 12 34 56 78;Lyon;2.450,75
 Lucía Gómez;+34 612 345 678;Madrid;€ 75`;
+
+export const TEXT_SAMPLE_BY_LOCALE: Record<Locale, string> = {
+  uk: `Найменування;Телефон;Місто;Сума
+Олена Коваленко;+380 67 111 22 33;Київ;1 250,50
+Іван Петренко;050 123 45 67;Львів;890,00`,
+  en: TEXT_SAMPLE,
+  de: `Name;Telefon;Stadt;Betrag
+Mara Keller;0049 151 23456789;Berlin;890,00
+Ada Keller;+49 30 123456;Hamburg;1 250,50`,
+  fr: `Nom;Téléphone;Ville;Montant
+Jean Dupont;+33 6 12 34 56 78;Lyon;2.450,75
+Marie Martin;01 45 67 89 01;Paris;99,90`,
+  es: `Nombre;Teléfono;Ciudad;Importe
+Lucía Gómez;+34 612 345 678;Madrid;75,00
+Carlos Ruiz;+34 91 234 56 78;Barcelona;1.250,50`,
+  pl: `Nazwa;Telefon;Miasto;Kwota
+Jan Kowalski;+48 501 234 567;Warszawa;1 250,50
+Anna Nowak;+48 22 123 45 67;Kraków;890,00`,
+};
 
 export const CLEAN_SAMPLE = `Name;Phone;Amount
   Олена   Коваленко  ;067 111 22 33;1 250,50 ₴
@@ -96,4 +172,126 @@ Teclado;45`,
 Laptop;1200
 Monitor;350,50
 Klawiatura;45`,
+};
+
+export const PRICE_DIFF_SAMPLE_A: Record<Locale, string> = {
+  uk: `Товар;Ціна
+Папір А4;120,00
+Ручки сині;15,50
+Степлер;89,00`,
+  en: `Product;Price
+A4 paper;120.00
+Blue pens;15.50
+Stapler;89.00`,
+  de: `Artikel;Preis
+A4 Papier;120,00
+Kugelschreiber;15,50
+Hefter;89,00`,
+  fr: `Article;Prix
+Papier A4;120,00
+Stylos bleus;15,50
+Agrafeuse;89,00`,
+  es: `Producto;Precio
+Papel A4;120,00
+Bolígrafos;15,50
+Grapadora;89,00`,
+  pl: `Towar;Cena
+Papier A4;120,00
+Długopisy;15,50
+Zszywacz;89,00`,
+};
+
+export const PRICE_DIFF_SAMPLE_B: Record<Locale, string> = {
+  uk: `Товар;Ціна
+Папір А4;125,00
+Ручки сині;14,00
+Папки;42,00`,
+  en: `Product;Price
+A4 paper;125.00
+Blue pens;14.00
+Folders;42.00`,
+  de: `Artikel;Preis
+A4 Papier;125,00
+Kugelschreiber;14,00
+Ordner;42,00`,
+  fr: `Article;Prix
+Papier A4;125,00
+Stylos bleus;14,00
+Classeurs;42,00`,
+  es: `Producto;Precio
+Papel A4;125,00
+Bolígrafos;14,00
+Carpetas;42,00`,
+  pl: `Towar;Cena
+Papier A4;125,00
+Długopisy;14,00
+Segregatory;42,00`,
+};
+
+export const DATA_CLEANER_SAMPLE: Record<Locale, string> = {
+  uk: `Товар;Телефон;Ціна
+  Папір А4 ; +38 (050) 123-45-67 ;  1 200,50 ₴
+Папір А4 ;0501234567;1 200,50
+Ручки сині;(067) 111 22 33;15,50
+Степлер;;89,00
+; ;
+Клей;050-000-00-00;€ 12,99`,
+  en: `Product;Phone;Price
+  A4 paper ; +1 (415) 555-0199 ;  1,200.50 USD
+A4 paper ;4155550199;1,200.50
+Blue pens;(555) 123-4567;15.50
+Stapler;;89.00
+; ;
+Glue;555-000-0000;€ 12.99`,
+  de: `Artikel;Telefon;Preis
+  A4 Papier ; +49 30 123456 ;  1.200,50 EUR
+A4 Papier ;030123456;1.200,50
+Kugelschreiber;0151 2345678;15,50
+Hefter;;89,00`,
+  fr: `Article;Téléphone;Prix
+  Papier A4 ; +33 6 12 34 56 78 ;  1 200,50 EUR
+Papier A4 ;0612345678;1 200,50
+Stylos bleus;06 11 22 33 44;15,50
+Agrafeuse;;89,00`,
+  es: `Producto;Teléfono;Precio
+  Papel A4 ; +34 612 34 56 78 ;  1.200,50 EUR
+Papel A4 ;612345678;1.200,50
+Bolígrafos;612 11 22 33;15,50
+Grapadora;;89,00`,
+  pl: `Towar;Telefon;Cena
+  Papier A4 ; +48 501 234 567 ;  1 200,50 PLN
+Papier A4 ;501234567;1 200,50
+Długopisy;501-111-222;15,50
+Zszywacz;;89,00`,
+};
+
+export const QR_SAMPLE_BY_LOCALE: Record<Locale, string> = {
+  uk: `Товар;Код
+Папір А4;4820156671234
+Ручки сині;SKU-PEN-12
+Демо QR;https://kixt.net/puretable
+Без коду;
+Невалідний штрих;КИРИЛИЦЯ`,
+  en: `Product;Code
+A4 paper;4820156671234
+Blue pens;SKU-PEN-12
+Demo QR;https://example.com/item
+No code;
+Invalid barcode;SKU-🙂`,
+  de: `Artikel;Code
+A4 Papier;4820156671234
+Kugelschreiber;SKU-PEN-12
+Demo QR;https://beispiel.de/artikel`,
+  fr: `Article;Code
+Papier A4;4820156671234
+Stylos bleus;SKU-PEN-12
+Démo QR;https://exemple.fr/article`,
+  es: `Producto;Código
+Papel A4;4820156671234
+Bolígrafos;SKU-PEN-12
+Demo QR;https://ejemplo.es/producto`,
+  pl: `Towar;Kod
+Papier A4;4820156671234
+Długopisy;SKU-PEN-12
+Demo QR;https://przyklad.pl/produkt`,
 };

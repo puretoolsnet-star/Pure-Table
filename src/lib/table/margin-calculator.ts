@@ -124,9 +124,65 @@ export function computeMarginPreview(
   };
 }
 
+function formatNumber(n: number, fraction = 2): string | number {
+  if (!Number.isFinite(n)) return "";
+  return fraction === 0 && n % 1 === 0 ? n : Number(n.toFixed(fraction));
+}
+
+export function applyPercentToSellColumn(
+  table: ParsedTable,
+  buyIdx: number,
+  sellIdx: number,
+  mode: MarginMode,
+  percent: number,
+): ParsedTable {
+  if (!Number.isFinite(percent) || percent < 0) return table;
+  if (mode === "margin" && percent >= 100) return table;
+
+  const width = Math.max(
+    table.headers.length,
+    table.rows.reduce((max, row) => Math.max(max, row.length), 0),
+    sellIdx + 1,
+  );
+  const headers = Array.from({ length: width }, (_, index) => table.headers[index]?.trim() ?? "");
+
+  const rows = table.rows.map((row) => {
+    const buy = parseCellNumber(row[buyIdx] ?? "");
+    if (!Number.isFinite(buy) || buy < 0) {
+      return Array.from({ length: width }, (_, index) => row[index] ?? "");
+    }
+    let sell = Number.NaN;
+    if (mode === "markup") sell = buy * (1 + percent / 100);
+    else if (mode === "margin") sell = buy / (1 - percent / 100);
+    const next = Array.from({ length: width }, (_, index) => row[index] ?? "");
+    if (Number.isFinite(sell)) {
+      next[sellIdx] = sell % 1 === 0 ? String(sell) : sell.toFixed(2);
+    }
+    return next;
+  });
+
+  return { headers, rows };
+}
+
+export function ensureColumnAt(
+  table: ParsedTable,
+  index: number,
+  header: string,
+): { table: ParsedTable; index: number } {
+  const width = Math.max(table.headers.length, index + 1);
+  const headers = Array.from({ length: width }, (_, i) =>
+    i === index ? header : table.headers[i]?.trim() ?? "",
+  );
+  const rows = table.rows.map((row) =>
+    Array.from({ length: width }, (_, i) => (i === index ? row[i] ?? "" : row[i] ?? "")),
+  );
+  return { table: { headers, rows }, index };
+}
+
 export function buildMarginExportTable(
   preview: MarginPreview,
   labels: {
+    item?: string;
     buy: string;
     sell: string;
     qty: string;
@@ -137,12 +193,14 @@ export function buildMarginExportTable(
     markupPct: string;
     totals: string;
   },
+  options?: { items?: string[] },
 ): ParsedTable {
   if (preview.rows.length === 0) {
     return { headers: [], rows: [] };
   }
 
   const headers = [
+    ...(labels.item ? [labels.item] : []),
     labels.buy,
     labels.sell,
     labels.qty,
@@ -153,23 +211,29 @@ export function buildMarginExportTable(
     labels.markupPct,
   ];
 
-  const fmt = (n: number, fraction = 2) =>
-    Number.isFinite(n) ? n.toFixed(fraction) : "";
+  const fmt = (n: number, fraction = 2): string => {
+    const value = formatNumber(n, fraction);
+    return typeof value === "number" ? String(value) : value;
+  };
 
-  const rows = preview.rows.map((r) => [
-    fmt(r.buy),
-    fmt(r.sell),
-    fmt(r.qty, r.qty % 1 === 0 ? 0 : 2),
-    fmt(r.costTotal),
-    fmt(r.revenue),
-    fmt(r.profit),
-    fmt(r.marginPct),
-    fmt(r.markupPct),
-  ]);
+  const rows = preview.rows.map((r, rowIndex) => {
+    const base = [
+      fmt(r.buy),
+      fmt(r.sell),
+      fmt(r.qty, r.qty % 1 === 0 ? 0 : 2),
+      fmt(r.costTotal),
+      fmt(r.revenue),
+      fmt(r.profit),
+      fmt(r.marginPct),
+      fmt(r.markupPct),
+    ];
+  const itemCell = options?.items?.[rowIndex]?.trim() ?? "";
+  return labels.item ? [itemCell, ...base] : base;
+  });
 
   const t = preview.totals;
-  rows.push([
-    labels.totals,
+  const totalCore = [
+    "",
     "",
     "",
     fmt(t.costTotal),
@@ -177,7 +241,9 @@ export function buildMarginExportTable(
     fmt(t.profit),
     fmt(t.marginPct),
     fmt(t.markupPct),
-  ]);
+  ];
+  const totalRow = labels.item ? [labels.totals, "", ...totalCore] : [labels.totals, ...totalCore];
+  rows.push(totalRow);
 
   return { headers, rows };
 }

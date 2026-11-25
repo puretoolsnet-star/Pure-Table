@@ -139,7 +139,12 @@ export function textToTable(
     Array.from({ length: width }, (_, index) => row[index] ?? ""),
   );
 
-  const useHeader = options.header !== false && looksLikeHeader(padded[0]);
+  const useHeader =
+    options.header === false
+      ? false
+      : options.header === true
+        ? padded.length > 0
+        : looksLikeHeader(padded[0]);
   const label = options.columnLabel ?? ((index: number) => `Column ${index}`);
 
   if (useHeader) {

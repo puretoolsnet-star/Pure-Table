@@ -1,4 +1,5 @@
 import { cleanTable, formatAmount, formatPhone } from "../src/lib/table/clean";
+import { DEFAULT_CLEAN_OPTIONS } from "../src/lib/table/types";
 import { parseInvoice } from "../src/lib/table/parse-invoice";
 import { CLEAN_SAMPLE, INVOICE_SAMPLE_UK, TEXT_SAMPLE } from "../src/lib/table/samples";
 import { textToTable } from "../src/lib/table/split-text";
@@ -29,7 +30,17 @@ if (text.headers[0] !== "Name" || text.rows.length !== 4 || text.headers.length 
 
 const cleaned = cleanTable(
   textToTable(CLEAN_SAMPLE, { delimiter: "semicolon", header: true }),
-  { trim: true, collapseSpaces: true, dropEmpty: true, dedupe: true, phones: true, amounts: true },
+  {
+    ...DEFAULT_CLEAN_OPTIONS,
+    trim: true,
+    collapseSpaces: true,
+    dropEmpty: true,
+    dedupe: true,
+    phones: true,
+    phoneScope: "all",
+    amounts: true,
+    amountScope: "all",
+  },
 );
 
 if (cleaned.table.rows.length !== 3) {

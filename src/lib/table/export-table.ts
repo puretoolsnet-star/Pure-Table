@@ -19,6 +19,17 @@ function toMatrix(sheet: TableSheet): string[][] {
   return [sheet.headers, ...sheet.rows];
 }
 
+function escapeCsvCell(value: string): string {
+  if (/[",\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
+  return value;
+}
+
+export function buildCsvFromSheet(sheet: TableSheet): string {
+  if (sheet.headers.length === 0 && sheet.rows.length === 0) return "";
+  const matrix = toMatrix(sheet);
+  return matrix.map((row) => row.map(escapeCsvCell).join(",")).join("\n");
+}
+
 export async function downloadSheets(
   format: "csv" | "xlsx",
   filenameBase: string,
