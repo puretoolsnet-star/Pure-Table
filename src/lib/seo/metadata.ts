@@ -35,7 +35,7 @@ export function buildPageMetadata(page: SeoPageId, locale: Locale): Metadata {
   const ogImage = absoluteUrl(buildOgImageUrl(locale, page));
 
   return {
-    title: copy.title,
+    title: { absolute: copy.title },
     description: copy.description,
     keywords: copy.keywords,
     alternates: {

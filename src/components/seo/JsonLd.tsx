@@ -3,11 +3,18 @@ type JsonLdProps = {
 };
 
 export function JsonLd({ data }: JsonLdProps) {
+  const blocks = Array.isArray(data) ? data : [data];
+
   return (
-    <script
-      type="application/ld+json"
-      suppressHydrationWarning
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
+    <>
+      {blocks.map((block, index) => (
+        <script
+          key={index}
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(block) }}
+        />
+      ))}
+    </>
   );
 }

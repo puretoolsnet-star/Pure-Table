@@ -2,33 +2,21 @@
 
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useCallback } from "react";
 
 import { ProToolCard } from "@/components/pro/ProToolCard";
 import { PrivacyBanner } from "@/components/layout/PrivacyBanner";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { useI18n } from "@/i18n/context";
-import type { ToolId } from "@/i18n/types";
 import { PRO_HUB_ICON, PRO_TOOL_CARDS } from "@/lib/pro-tools-meta";
-import { toolRoute } from "@/lib/i18n/routing";
 import { PageSeoSection } from "@/components/seo/PageSeoSection";
 import { useLocalizedPath } from "@/lib/i18n/use-localized-path";
 import { usePageSeoContent } from "@/lib/i18n/use-page-seo-content";
 
 export function ProToolsHub() {
-  const router = useRouter();
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const href = useLocalizedPath();
   const HubIcon = PRO_HUB_ICON;
   const seoContent = usePageSeoContent("pro");
-
-  const openTool = useCallback(
-    (toolId: ToolId) => {
-      router.push(toolRoute(locale, toolId));
-    },
-    [locale, router],
-  );
 
   return (
     <div className="puretable-page-shell puretable-cyan-shell relative flex min-h-dvh w-full min-w-0 flex-1 flex-col overflow-x-hidden bg-gray-950 font-sans text-gray-100">
@@ -71,7 +59,6 @@ export function ProToolsHub() {
                 toolId={tool.id}
                 icon={tool.icon}
                 accent={tool.accent}
-                onActivate={openTool}
               />
             ))}
           </div>

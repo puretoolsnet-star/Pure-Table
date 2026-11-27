@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, LOCALES, dictionaries, type Locale } from "@/i18n/locales";
+import { DEFAULT_LOCALE, LOCALES, TOOL_IDS, dictionaries, type Locale } from "@/i18n/locales";
 import type { ToolId } from "@/i18n/types";
 import type { SeoPageId } from "@/i18n/seo/copy";
 import { getSeoCopy } from "@/i18n/seo/copy";
@@ -28,6 +28,7 @@ function ecosystemRelatedUrls(): string[] {
 export function buildHomeStructuredData(locale: Locale) {
   const copy = getSeoCopy("home", locale);
   const url = absoluteCanonicalUrl(homeRoute(locale));
+  const dict = dictionaries[locale];
 
   return [
     {
@@ -38,6 +39,17 @@ export function buildHomeStructuredData(locale: Locale) {
       description: copy.description,
       inLanguage: HREFLANG_MAP[locale],
       sameAs: ecosystemRelatedUrls(),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: dict.home.toolsHeading,
+      itemListElement: TOOL_IDS.map((toolId, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: dict.tools[toolId].title,
+        url: absoluteCanonicalUrl(toolRoute(locale, toolId)),
+      })),
     },
     {
       "@context": "https://schema.org",

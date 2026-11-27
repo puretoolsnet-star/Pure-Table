@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { HtmlLangBootstrap } from "@/components/i18n/HtmlLangBootstrap";
 import { LocaleShell } from "@/components/i18n/LocaleShell";
 import { isLocale, LOCALES, type Locale } from "@/i18n/locales";
 
@@ -14,5 +15,11 @@ export function generateStaticParams() {
 export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
-  return <LocaleShell locale={raw as Locale}>{children}</LocaleShell>;
+  const locale = raw as Locale;
+  return (
+    <>
+      <HtmlLangBootstrap locale={locale} />
+      <LocaleShell locale={locale}>{children}</LocaleShell>
+    </>
+  );
 }

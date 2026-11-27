@@ -38,7 +38,7 @@ export function middleware(request: NextRequest) {
     const match = pathname.match(LOCALE_PREFIX);
     const raw = match?.[1];
     const base = raw && isLocale(raw) ? raw : DEFAULT_LOCALE;
-    return NextResponse.redirect(new URL(`/${base}/tools/margin-calculator`, request.url), 308);
+    return NextResponse.redirect(new URL(`/${base}/tools/data-cleaner`, request.url), 308);
   }
 
   let response: NextResponse;
@@ -48,6 +48,10 @@ export function middleware(request: NextRequest) {
       new URL(localizedPath(DEFAULT_LOCALE, "/"), request.url),
     );
   } else if (pathname.startsWith("/tools/")) {
+    response = NextResponse.redirect(
+      new URL(localizedPath(DEFAULT_LOCALE, pathname), request.url),
+    );
+  } else if (pathname === "/pro" || pathname === "/table") {
     response = NextResponse.redirect(
       new URL(localizedPath(DEFAULT_LOCALE, pathname), request.url),
     );

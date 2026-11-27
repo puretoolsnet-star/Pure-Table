@@ -5,9 +5,11 @@ import Link from "next/link";
 
 import { PrivacyBanner } from "@/components/layout/PrivacyBanner";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { ProToolCard } from "@/components/pro/ProToolCard";
 import { PageSeoSection } from "@/components/seo/PageSeoSection";
 import { useI18n } from "@/i18n/context";
 import { usePageSeoContent } from "@/lib/i18n/use-page-seo-content";
+import { PRO_TOOL_CARDS } from "@/lib/pro-tools-meta";
 
 export function HomePage() {
   const { t, locale } = useI18n();
@@ -72,6 +74,25 @@ export function HomePage() {
                 {t.home.proToolsCta}
               </Link>
             </div>
+          </div>
+        </section>
+        <section aria-labelledby="home-tools-grid-heading" className="mb-10 w-full min-w-0">
+          <h2 id="home-tools-grid-heading" className="text-lg font-semibold text-white sm:text-xl">
+            {t.home.toolsHeading}
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-400 [overflow-wrap:anywhere] sm:text-base">
+            {t.home.proToolsHint}
+          </p>
+          <div
+            className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
+            role="list"
+            aria-label={t.home.toolsAria}
+          >
+            {PRO_TOOL_CARDS.map((tool) => (
+              <div key={tool.id} role="listitem" className="min-w-0">
+                <ProToolCard toolId={tool.id} icon={tool.icon} accent={tool.accent} />
+              </div>
+            ))}
           </div>
         </section>
         <PageSeoSection content={seoContent} />

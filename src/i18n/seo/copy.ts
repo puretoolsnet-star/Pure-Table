@@ -38,25 +38,25 @@ const home: Record<Locale, SeoCopy> = {
   de: {
     title: "PureTable — Rechnungen, OCR und Preise in Excel",
     description:
-      "Sechs lokale Tools: Beleg-OCR, Rechnungsparser, Trennzeichen, Zusammenführen, Margenrechner und Währungsumrechnung. Kein Server-Upload.",
+      "Neun lokale Tools: Beleg-OCR, Rechnungsparser, Text mit Trennzeichen, CSV zusammenführen, Marge, Währung, Preisvergleich, Datenbereinigung und QR. Kein Server-Upload.",
     keywords: ["Rechnung zu Excel", "Beleg OCR", "Marge", "Währung Excel", "PureTable"],
   },
   fr: {
     title: "PureTable — factures, OCR et prix dans Excel",
     description:
-      "Six outils locaux : OCR de reçus, analyse de factures, délimiteurs, fusion, calcul de marge et conversion de devises. Aucun envoi serveur.",
+      "Neuf outils locaux : OCR de reçus, analyse de factures, délimiteurs, fusion, marge, devises, comparateur de prix, nettoyage et QR. Aucun envoi serveur.",
     keywords: ["facture Excel", "OCR reçu", "marge", "devise tableau", "PureTable"],
   },
   es: {
     title: "PureTable — facturas, OCR y precios en Excel",
     description:
-      "Seis herramientas locales: OCR de recibos, análisis de facturas, delimitadores, fusión, margen y conversión de divisas. Sin subir archivos.",
+      "Nueve herramientas locales: OCR de recibos, análisis de facturas, delimitadores, fusión, margen, divisas, comparación de precios, limpieza y QR. Sin subir archivos.",
     keywords: ["factura Excel", "OCR recibo", "margen", "divisa tabla", "PureTable"],
   },
   pl: {
     title: "PureTable — faktury, OCR i ceny w Excelu",
     description:
-      "Sześć narzędzi lokalnych: OCR paragonów, parser faktur, separatory, scalanie, marża i przeliczanie walut. Bez wysyłania na serwer.",
+      "Dziewięć narzędzi lokalnych: OCR paragonów, parser faktur, separatory, scalanie, marża, waluty, porównanie cen, czyszczenie danych i QR. Bez wysyłania na serwer.",
     keywords: ["faktura Excel", "OCR paragon", "marża", "waluta w tabeli", "PureTable"],
   },
 };
@@ -345,64 +345,76 @@ const tools: Record<ToolId, Record<Locale, SeoCopy>> = {
   "price-diff": {
     uk: {
       title: "Порівняння прайсів — PureTable",
-      description: "Два CSV або Excel у браузері: знайдіть різницю цін по товарах.",
+      description:
+        "Завантажте два CSV або Excel з цінами постачальників і побачте різницю по кожному SKU у браузері — без відправки файлів на сервер.",
       keywords: ["порівняння прайсів", "price diff", "PureTable"],
     },
     en: {
       title: "Price list diff — PureTable",
-      description: "Compare two CSV or Excel price lists locally in the browser.",
+      description:
+        "Upload two supplier CSV or Excel price lists and see per-item price changes in your browser — files never leave your device.",
       keywords: ["price diff", "compare spreadsheet", "PureTable"],
     },
     de: {
       title: "Preislisten-Vergleich — PureTable",
-      description: "Zwei Preislisten im Browser vergleichen.",
+      description:
+        "Zwei CSV- oder Excel-Preislisten im Browser vergleichen und Preisänderungen pro Artikel sehen — ohne Server-Upload.",
       keywords: ["Preisvergleich", "Excel", "PureTable"],
     },
     fr: {
       title: "Comparateur de prix — PureTable",
-      description: "Comparez deux grilles tarifaires dans le navigateur.",
+      description:
+        "Comparez deux grilles tarifaires CSV/Excel et visualisez les écarts par article dans le navigateur, sans envoi serveur.",
       keywords: ["comparateur prix", "Excel", "PureTable"],
     },
     es: {
       title: "Comparador de precios — PureTable",
-      description: "Compara dos listas de precios en el navegador.",
+      description:
+        "Compara dos listas de precios CSV o Excel y revisa cambios por producto en el navegador, sin subir archivos.",
       keywords: ["comparar precios", "Excel", "PureTable"],
     },
     pl: {
       title: "Porównanie cenników — PureTable",
-      description: "Porównaj dwa cenniki lokalnie w przeglądarce.",
+      description:
+        "Porównaj dwa cenniki CSV/Excel i zobacz różnice cen per pozycja w przeglądarce — pliki nie opuszczają urządzenia.",
       keywords: ["porównanie cen", "Excel", "PureTable"],
     },
   },
   "data-cleaner": {
     uk: {
       title: "Очищення табличних даних — PureTable",
-      description: "Дублікати, пробіли, телефони й суми — локально у браузері.",
+      description:
+        "Приберіть дублікати, зайві пробіли та відформатуйте телефони й суми в CSV/Excel локально у браузері перед експортом.",
       keywords: ["очищення даних", "CSV", "PureTable"],
     },
     en: {
       title: "Spreadsheet data cleaner — PureTable",
-      description: "Dedupe, trim, and format phones and amounts in the browser.",
+      description:
+        "Remove duplicates, trim whitespace, and normalize phone numbers and amounts in CSV/Excel — all processing stays in the browser.",
       keywords: ["data cleaning", "CSV", "PureTable"],
     },
     de: {
       title: "Datenbereinigung — PureTable",
-      description: "Duplikate und Formatierung lokal im Browser.",
+      description:
+        "Duplikate entfernen, Leerzeichen trimmen und Telefonnummern sowie Beträge in CSV/Excel formatieren — lokal im Browser.",
       keywords: ["Datenbereinigung", "CSV", "PureTable"],
     },
     fr: {
       title: "Nettoyage de données — PureTable",
-      description: "Doublons et formatage local dans le navigateur.",
+      description:
+        "Supprimez les doublons, les espaces superflus et normalisez téléphones et montants dans CSV/Excel — 100 % dans le navigateur.",
       keywords: ["nettoyage données", "CSV", "PureTable"],
     },
     es: {
       title: "Limpieza de datos — PureTable",
-      description: "Duplicados y formato local en el navegador.",
+      description:
+        "Elimina duplicados, espacios sobrantes y formatea teléfonos e importes en CSV/Excel de forma local en el navegador.",
       keywords: ["limpieza datos", "CSV", "PureTable"],
     },
     pl: {
       title: "Czyszczenie danych — PureTable",
-      description: "Duplikaty i formatowanie lokalnie w przeglądarce.",
+      description:
+        "Usuń duplikaty, zbędne spacje i sformatuj telefony oraz kwoty w CSV/Excel lokalnie w przeglądarce przed eksportem.",
       keywords: ["czyszczenie danych", "CSV", "PureTable"],
     },
   },
